@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Religion + History Exploratorium</title>
+    <meta
+      name="description"
+      content="A browser-ready exploratorium of recurring structures across documented religions and historical societies."
+    />
+    <style>
+      :root {
+        --bg: #09090b;
+        --panel: #111114;
+        --panel-2: #17171b;
+        --panel-3: #1f1f24;
+        --text: #f4f4f5;
+        --muted: #a1a1aa;
+        --muted-2: #71717a;
+        --border: #27272a;
+        --accent: #fafafa;
+        --accent-text: #0a0a0a;
+        --chip: #18181b;
+        --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 16px;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      a { color: inherit; text-decoration: none; }
+      button, input { font: inherit; }
+      .page {
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent 26%),
+          radial-gradient(circle at 85% 20%, rgba(255,255,255,0.03), transparent 22%),
+          linear-gradient(180deg, #0a0a0c 0%, #08080a 100%);
+      }
+      .container { max-width: 1360px; margin: 0 auto; padding: 24px; }
+      .grid { display: grid; gap: 24px; }
+      .hero-grid { grid-template-columns: 1.2fr 0.8fr; }
+      .main-grid { grid-template-columns: 340px 1fr; align-items: start; }
+      .card {
+        background: linear-gradient(180deg, rgba(17,17,20,0.96), rgba(10,10,12,0.96));
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+      }
+      .card-body { padding: 24px; }
+      .hero-title { font-size: clamp(2.1rem, 4vw, 4rem); line-height: 1.04; letter-spacing: -0.04em; margin: 0; }
+      .hero-text, .muted { color: var(--muted); }
+      .hero-text { font-size: 1.06rem; line-height: 1.8; max-width: 62ch; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: var(--chip); border: 1px solid var(--border);
+        color: var(--text); border-radius: 999px; padding: 8px 14px; font-size: 0.9rem;
+      }
+      .spine {
+        margin-top: 18px; padding: 18px; border-radius: var(--radius-lg);
+        border: 1px solid var(--border); background: rgba(0,0,0,0.28);
+        line-height: 1.75; color: #d4d4d8;
+      }
+      .sidebar { position: sticky; top: 18px; max-height: calc(100vh - 36px); overflow: hidden; }
+      .sidebar .card-body { display: flex; flex-direction: column; gap: 16px; }
+      .search-wrap { position: relative; }
+      .search-input {
+        width: 100%; background: #0c0c0f; color: var(--text); border: 1px solid var(--border);
+        border-radius: 18px; padding: 13px 14px 13px 40px; outline: none;
+      }
+      .search-input:focus { border-color: #52525b; box-shadow: 0 0 0 3px rgba(255,255,255,0.06); }
+      .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted-2); }
+      .toggle-row, .quick-row, .tag-row { display: flex; flex-wrap: wrap; gap: 10px; }
+      .toggle {
+        flex: 1; min-width: 110px; border: 1px solid var(--border); border-radius: 16px;
+        background: #0c0c0f; color: var(--muted); padding: 12px 14px; cursor: pointer;
+        transition: 0.2s ease;
+      }
+      .toggle.active, .quick-btn.active, .node-btn.active {
+        background: var(--accent); color: var(--accent-text); border-color: var(--accent);
+      }
+      .quick-btn, .chip {
+        border: 1px solid var(--border); background: #0d0d10; color: #e4e4e7;
+        border-radius: 999px; padding: 10px 14px; cursor: pointer; transition: 0.2s ease;
+      }
+      .quick-btn:hover, .toggle:hover, .chip:hover, .node-btn:hover, .source-link:hover { transform: translateY(-1px); }
+      .node-list { overflow: auto; padding-right: 6px; display: flex; flex-direction: column; gap: 12px; }
+      .node-btn {
+        text-align: left; width: 100%; padding: 16px; cursor: pointer; transition: 0.2s ease;
+        border-radius: 22px; border: 1px solid var(--border); background: rgba(10,10,12,0.66); color: var(--text);
+      }
+      .node-btn-title { font-weight: 700; margin-bottom: 8px; }
+      .node-btn-text { color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
+      .content-card { min-height: 72vh; }
+      .section-grid { display: grid; gap: 16px; }
+      .section-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section-grid.split { grid-template-columns: 1.15fr 0.85fr; }
+      .inner-card {
+        border: 1px solid var(--border); border-radius: 24px; background: rgba(7,7,9,0.45);
+        padding: 20px;
+      }
+      .eyebrow { color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.72rem; margin-bottom: 10px; }
+      h2, h3, h4, p { margin: 0; }
+      h2 { font-size: clamp(1.85rem, 2.6vw, 3.1rem); line-height: 1.05; letter-spacing: -0.04em; }
+      h3 { font-size: 1.1rem; }
+      .lead { font-size: 1.05rem; line-height: 1.8; color: #d4d4d8; margin-top: 12px; max-width: 58ch; }
+      .stack { display: flex; flex-direction: column; gap: 14px; }
+      .example, .source-link {
+        display: block; border: 1px solid var(--border); border-radius: 18px; background: rgba(0,0,0,0.24);
+        padding: 16px; transition: 0.2s ease;
+      }
+      .example-title, .source-title { font-weight: 700; margin-bottom: 8px; }
+      .example-note, .source-url, .small { color: var(--muted); line-height: 1.7; }
+      .source-url { font-size: 0.82rem; margin-top: 8px; word-break: break-word; }
+      .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .source-library { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sr-only {
+        position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+      }
+      .hidden { display: none !important; }
+      .empty-state { color: var(--muted); line-height: 1.8; padding: 8px 0 2px; }
+      .meta-list { display: grid; gap: 12px; }
+      .meta-row { display: flex; gap: 12px; color: #d4d4d8; line-height: 1.7; }
+      .meta-dot { color: var(--muted-2); }
+      @media (max-width: 1100px) {
+        .hero-grid, .main-grid, .section-grid.two, .section-grid.split, .footer-grid, .source-library { grid-template-columns: 1fr; }
+        .sidebar { position: static; max-height: none; }
+      }
+      @media (max-width: 720px) {
+        .container { padding: 16px; }
+        .card-body { padding: 18px; }
+        .hero-text, .lead, .spine { font-size: 0.98rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useMemo, useState } = React;
+
+      const themes = [
+        {
+          id: "survival-kinship",
+          icon: "◉",
+          title: "Survival, Kinship, and Group Size",
+          thesis:
+            "Humans begin vulnerable, so care networks scale from parent to family to clan to society. Religion and custom often stabilize belonging, obligation, and trust.",
+          whyItRepeats:
+            "Human children develop slowly. That makes caregiving, alliance, inheritance, and social cohesion central across cultures.",
+          examples: [
+            {
+              label: "Kinship and ancestor lineages in many traditional societies",
+              note: "Ancestors, family memory, and lineage obligations often anchor social identity long before modern states."
+            },
+            {
+              label: "Ancient Rome, China, and many African traditions",
+              note: "Household rites and ancestor reverence often connect family continuity to cosmic or social order."
+            },
+            {
+              label: "Abrahamic traditions",
+              note: "Family law, inheritance, marriage, and communal obligation are tied to sacred narratives and covenantal identity."
+            }
+          ],
+          links: [
+            { title: "Stanford Encyclopedia: The Concept of Religion", url: "https://plato.stanford.edu/entries/concept-religion/" },
+            { title: "Britannica: Ancestor Worship", url: "https://www.britannica.com/topic/ancestor-worship" },
+            { title: "Britannica Students: Ancestor Worship", url: "https://kids.britannica.com/students/article/ancestor-worship/272853" }
+          ],
+          tags: ["kinship", "lineage", "identity", "belonging"]
+        },
+        {
+          id: "death-afterlife",
+          icon: "✢",
+          title: "Death, Burial, and Afterlife",
+          thesis:
+            "Across documented cultures, death is rarely left as raw biological ending. Burial, funerary rites, and afterlife beliefs transform loss into continuity.",
+          whyItRepeats:
+            "Death threatens both emotional stability and social continuity. Ritual and story help make the dead legible to the living.",
+          examples: [
+            {
+              label: "Neanderthal and early human burials",
+              note: "Archaeological evidence suggests very early attention to the dead, sometimes with grave goods."
+            },
+            {
+              label: "Ancient Egypt",
+              note: "Mummification, tomb texts, judgment scenes, and elaborate preparation map death into a meaningful journey."
+            },
+            {
+              label: "Greek, Celtic, Hindu, Christian, Islamic traditions",
+              note: "Different metaphysics, same underlying move: the dead are ritually processed, morally situated, and narratively continued."
+            }
+          ],
+          links: [
+            { title: "Britannica: Afterlife", url: "https://www.britannica.com/topic/afterlife-religion" },
+            { title: "World History Encyclopedia: Burial", url: "https://www.worldhistory.org/burial/" },
+            { title: "The Met: Death, Burial, and the Afterlife in Ancient Greece", url: "https://www.metmuseum.org/essays/death-burial-and-the-afterlife-in-ancient-greece" },
+            { title: "Smarthistory: Ancient Egyptian Religious Life and Afterlife", url: "https://smarthistory.org/reframing-art-history/ancient-egyptian-religious-life-and-afterlife/" },
+            { title: "Religion Media Centre: Death and Funerals in World Religions", url: "https://religionmediacentre.org.uk/factsheets/death-funeral-rituals-in-world-religions/" }
+          ],
+          tags: ["death", "burial", "afterlife", "mourning"]
+        },
+        {
+          id: "ritual",
+          icon: "◎",
+          title: "Ritual and Repetition",
+          thesis:
+            "Religions do not survive as ideas alone. They survive through repeated bodily action: prayer, sacrifice, offerings, festivals, fasting, initiation, marriage, mourning.",
+          whyItRepeats:
+            "Ritual turns belief into muscle memory and private feeling into group synchrony.",
+          examples: [
+            {
+              label: "Rites of passage worldwide",
+              note: "Birth, puberty, marriage, and death are repeatedly ritualized because they mark dangerous transitions in identity and status."
+            },
+            {
+              label: "Ancient Egypt and Mesopotamia",
+              note: "Offerings, temple care, purification, and prescribed sacred actions are central, not peripheral."
+            },
+            {
+              label: "Modern religions",
+              note: "Salat, Eucharist, puja, meditation, pilgrimage, Sabbath practice, and holidays all transmit belonging through repetition."
+            }
+          ],
+          links: [
+            { title: "Britannica: Ritual and Rites of Passage", url: "https://www.britannica.com/topic/ritual/Rites-of-passage" },
+            { title: "Britannica: Sacrifice in the Religions of the World", url: "https://www.britannica.com/topic/sacrifice-religion/Sacrifice-in-the-religions-of-the-world" },
+            { title: "The Met: Temple of Dendur — Architecture and Ritual", url: "https://www.metmuseum.org/essays/temple-of-dendur-architecture-and-ritual" },
+            { title: "The Met: Mesopotamian Magic in the First Millennium B.C.", url: "https://www.metmuseum.org/essays/mesopotamian-magic-in-the-first-millennium-bc" }
+          ],
+          tags: ["ritual", "initiation", "festival", "sacrifice"]
+        },
+        {
+          id: "law-order",
+          icon: "▣",
+          title: "Law, Morality, and Cosmic Order",
+          thesis:
+            "As human groups scale up, rules need more force than preference. Religion often gives law and morality sacred backing: divine command, cosmic balance, karmic order, covenant, justice beyond death.",
+          whyItRepeats:
+            "Large groups need legitimacy. A rule tied to heaven, gods, ancestors, or cosmic order becomes harder to ignore than a mere suggestion.",
+          examples: [
+            {
+              label: "Code of Hammurabi",
+              note: "A legal corpus presented within a divine-political frame, showing how law and sacred legitimacy intertwine."
+            },
+            {
+              label: "Ma'at, Dharma, Torah, Sharia, Canon Law",
+              note: "Different traditions, same structural function: embed social order in a larger moral universe."
+            },
+            {
+              label: "Judgment after death",
+              note: "When moral accounting extends beyond visible life, social order gains metaphysical reinforcement."
+            }
+          ],
+          links: [
+            { title: "Britannica: Code of Hammurabi", url: "https://www.britannica.com/topic/Code-of-Hammurabi" },
+            { title: "World History Encyclopedia: Code of Hammurabi", url: "https://www.worldhistory.org/Code_of_Hammurabi/" },
+            { title: "Stanford Encyclopedia: Religion and Morality", url: "https://plato.stanford.edu/entries/religion-morality/" }
+          ],
+          tags: ["law", "justice", "morality", "order"]
+        },
+        {
+          id: "sacred-space-time",
+          icon: "△",
+          title: "Sacred Space and Sacred Time",
+          thesis:
+            "Religions repeatedly carve ordinary reality into charged zones: temple, shrine, altar, mountain, tomb, pilgrimage route, holy day, fast, sabbath, festival season.",
+          whyItRepeats:
+            "Marking some places and times as special helps groups enter shared seriousness and orient memory, hierarchy, and identity.",
+          examples: [
+            {
+              label: "Pilgrimage traditions",
+              note: "Hajj, Kumbh Mela, Jerusalem, Bodh Gaya, shrines, saint tombs, and sacred mountains all convert geography into meaning."
+            },
+            {
+              label: "Temples, shrines, and precincts",
+              note: "From Mesopotamian temenos to Egyptian temples to household altars, sacred architecture organizes access to power."
+            },
+            {
+              label: "Calendrical time",
+              note: "Feasts, fasts, lunar cycles, New Year rites, and weekly observances make time itself religiously structured."
+            }
+          ],
+          links: [
+            { title: "Britannica: Pilgrimage", url: "https://www.britannica.com/topic/pilgrimage-religion" },
+            { title: "Britannica: Pilgrimage and the World", url: "https://www.britannica.com/topic/pilgrimage-religion/Pilgrimage-and-the-world" },
+            { title: "MDPI: Sacred Space and Ritual Behaviour in Ancient Mesopotamia", url: "https://www.mdpi.com/2673-9461/4/3/15" },
+            { title: "The Met: Divine Egypt", url: "https://www.metmuseum.org/exhibitions/divine-egypt" }
+          ],
+          tags: ["sacred space", "pilgrimage", "calendar", "temple"]
+        },
+        {
+          id: "story-symbol",
+          icon: "✦",
+          title: "Story, Symbol, and God-Formation",
+          thesis:
+            "A religion becomes durable when its stories, symbols, and practices stop feeling merely invented and begin functioning as reality-organizers. That is where 'big stories' start behaving like gods.",
+          whyItRepeats:
+            "Humans are symbolic creatures. We do not only react to what is physically present; we live inside shared meanings.",
+          examples: [
+            {
+              label: "Creation stories and world-order myths",
+              note: "Different contents, same role: explain why there is something, why order matters, and where humans fit."
+            },
+            {
+              label: "Living sacred images and texts",
+              note: "Images, icons, scriptures, relics, and names become active interfaces between group memory and sacred presence."
+            },
+            {
+              label: "Old gods and new gods",
+              note: "The objects of devotion change over time, but the underlying machinery of collective attention remains recognizable."
+            }
+          ],
+          links: [
+            { title: "Stanford Encyclopedia: Philosophy of Religion", url: "https://plato.stanford.edu/entries/philosophy-religion/" },
+            { title: "Stanford Encyclopedia: Comparative Philosophy of Religion", url: "https://plato.stanford.edu/entries/religion-comparative/" },
+            { title: "The Met: Divine Egypt", url: "https://www.metmuseum.org/exhibitions/divine-egypt" },
+            { title: "Stanford Encyclopedia: Religion and Science", url: "https://plato.stanford.edu/archives/spr2022/entries/religion-science/" }
+          ],
+          tags: ["myth", "symbol", "god", "meaning"]
+        }
+      ];
+
+      const quickPaths = [
+        { id: "death-afterlife", label: "Start with death" },
+        { id: "ritual", label: "Start with ritual" },
+        { id: "law-order", label: "Start with law" },
+        { id: "story-symbol", label: "Start with gods" }
+      ];
+
+      function App() {
+        const [query, setQuery] = useState("");
+        const [selected, setSelected] = useState("death-afterlife");
+        const [mode, setMode] = useState("map");
+
+        const filteredThemes = useMemo(() => {
+          const q = query.trim().toLowerCase();
+          if (!q) return themes;
+          return themes.filter((theme) => {
+            const haystack = [
+              theme.title,
+              theme.thesis,
+              theme.whyItRepeats,
+              ...(theme.tags || []),
+              ...theme.examples.flatMap((e) => [e.label, e.note]),
+              ...theme.links.map((l) => l.title)
+            ].join(" ").toLowerCase();
+            return haystack.includes(q);
+          });
+        }, [query]);
+
+        const active = filteredThemes.find((t) => t.id === selected) || filteredThemes[0] || themes[0];
+
+        React.useEffect(() => {
+          if (!filteredThemes.some((t) => t.id === selected) && filteredThemes[0]) {
+            setSelected(filteredThemes[0].id);
+          }
+        }, [filteredThemes, selected]);
+
+        return (
+          <div className="page">
+            <div className="container">
+              <div className="grid hero-grid" aria-label="Exploratorium introduction">
+                <section className="card">
+                  <div className="card-body">
+                    <div className="pill" aria-label="Project label">◌ Religion + History Exploratorium</div>
+                    <h1 className="hero-title" style={{ marginTop: 16 }}>Big stories, repeated structures, recurring gods</h1>
+                    <p className="hero-text" style={{ marginTop: 16 }}>
+                      A browser-ready field guide to common patterns across documented religions and historical societies: kinship, death,
+                      ritual, law, sacred space, and symbolic world-building.
+                    </p>
+                    <div className="spine">
+                      <strong style={{ color: "#fafafa" }}>Core spine:</strong> People are small and life is scary. So people stay together,
+                      make rules, and tell big stories to help them feel safe. When lots of people believe the same big story for a very long time,
+                      that story can start behaving like a god.
+                    </div>
+                  </div>
+                </section>
+
+                <aside className="card">
+                  <div className="card-body">
+                    <h3>How to use this</h3>
+                    <p className="muted" style={{ lineHeight: 1.8 }}>
+                      This does not claim to mathematically prove metaphysics. It maps repeatable human commonalities in documented religion and history.
+                    </p>
+                    <div className="meta-list">
+                      <div className="meta-row"><span className="meta-dot">•</span><span>Use the map to explore structural patterns that recur across civilizations.</span></div>
+                      <div className="meta-row"><span className="meta-dot">•</span><span>Open any node for examples and further reading from encyclopedias, museums, and reference sources.</span></div>
+                      <div className="meta-row"><span className="meta-dot">•</span><span>Switch between Map and Library view depending on whether you want a conceptual overview or a source-first browse.</span></div>
+                    </div>
+                  </div>
+                </aside>
+              </div>
+
+              <div className="grid main-grid" style={{ marginTop: 24 }}>
+                <aside className="card sidebar" aria-label="Navigation sidebar">
+                  <div className="card-body">
+                    <label className="sr-only" htmlFor="theme-search">Search themes</label>
+                    <div className="search-wrap">
+                      <span className="search-icon">⌕</span>
+                      <input
+                        id="theme-search"
+                        className="search-input"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Search death, ritual, law, pilgrimage..."
+                      />
+                    </div>
+
+                    <div className="toggle-row" role="tablist" aria-label="View mode">
+                      <button className={`toggle ${mode === "map" ? "active" : ""}`} onClick={() => setMode("map")} aria-pressed={mode === "map"}>Map</button>
+                      <button className={`toggle ${mode === "library" ? "active" : ""}`} onClick={() => setMode("library")} aria-pressed={mode === "library"}>Library</button>
+                    </div>
+
+                    <div className="quick-row">
+                      {quickPaths.map((path) => (
+                        <button
+                          key={path.id}
+                          className={`quick-btn ${selected === path.id ? "active" : ""}`}
+                          onClick={() => setSelected(path.id)}
+                        >
+                          {path.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="node-list" aria-label="Pattern nodes">
+                      {filteredThemes.length === 0 ? (
+                        <div className="empty-state">No matches. Try a broader search like <em>death</em>, <em>law</em>, or <em>pilgrimage</em>.</div>
+                      ) : (
+                        filteredThemes.map((theme) => (
+                          <button
+                            key={theme.id}
+                            className={`node-btn ${active && active.id === theme.id ? "active" : ""}`}
+                            onClick={() => setSelected(theme.id)}
+                          >
+                            <div className="node-btn-title">{theme.icon} {theme.title}</div>
+                            <div className="node-btn-text">{theme.thesis}</div>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </aside>
+
+                <main className="card content-card" aria-live="polite">
+                  <div className="card-body">
+                    {mode === "map" && active ? (
+                      <div className="stack">
+                        <div>
+                          <div className="pill">{active.icon} Pattern Node</div>
+                          <h2 style={{ marginTop: 16 }}>{active.title}</h2>
+                          <p className="lead">{active.thesis}</p>
+                        </div>
+
+                        <div className="section-grid two">
+                          <section className="inner-card">
+                            <div className="eyebrow">Why it repeats</div>
+                            <p className="lead" style={{ marginTop: 0 }}>{active.whyItRepeats}</p>
+                          </section>
+                          <section className="inner-card">
+                            <div className="eyebrow">Tags</div>
+                            <div className="tag-row">
+                              {active.tags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}
+                            </div>
+                          </section>
+                        </div>
+
+                        <div className="section-grid split">
+                          <section className="inner-card">
+                            <div className="eyebrow">Examples across history and religion</div>
+                            <h3 style={{ marginBottom: 14 }}>Not identical beliefs. Repeating structural moves.</h3>
+                            <div className="stack">
+                              {active.examples.map((example, idx) => (
+                                <article className="example" key={idx}>
+                                  <div className="example-title">{example.label}</div>
+                                  <div className="example-note">{example.note}</div>
+                                </article>
+                              ))}
+                            </div>
+                          </section>
+
+                          <section className="inner-card">
+                            <div className="eyebrow">Further exploration</div>
+                            <h3 style={{ marginBottom: 14 }}>Open reference trails.</h3>
+                            <div className="stack">
+                              {active.links.map((link) => (
+                                <a className="source-link" key={link.url} href={link.url} target="_blank" rel="noreferrer noopener">
+                                  <div className="source-title">{link.title} ↗</div>
+                                  <div className="source-url">{link.url}</div>
+                                </a>
+                              ))}
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <h2>Source Library</h2>
+                        <p className="lead">Browse by concept, then leave the map and follow the evidence outward.</p>
+                        <div className="source-library" style={{ marginTop: 24 }}>
+                          {filteredThemes.map((theme) => (
+                            <section className="inner-card" key={theme.id}>
+                              <div className="eyebrow">{theme.icon} {theme.tags.join(" • ")}</div>
+                              <h3 style={{ marginBottom: 10 }}>{theme.title}</h3>
+                              <p className="small" style={{ lineHeight: 1.75, marginBottom: 16 }}>{theme.thesis}</p>
+                              <div className="stack">
+                                {theme.links.map((link) => (
+                                  <a className="source-link" key={link.url} href={link.url} target="_blank" rel="noreferrer noopener">
+                                    <div className="source-title">{link.title} ↗</div>
+                                  </a>
+                                ))}
+                              </div>
+                            </section>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </main>
+              </div>
+
+              <div className="grid footer-grid" style={{ marginTop: 24 }}>
+                <section className="card"><div className="card-body"><h3>What this suggests</h3><p className="hero-text" style={{ fontSize: "0.98rem", marginTop: 10 }}>Religions differ profoundly in content, but many solve the same human problems: mortality, order, belonging, uncertainty, and meaning.</p></div></section>
+                <section className="card"><div className="card-body"><h3>What it does not claim</h3><p className="hero-text" style={{ fontSize: "0.98rem", marginTop: 10 }}>It does not disprove or prove any deity. It shows that recurring human conditions repeatedly generate recurring religious structures.</p></div></section>
+                <section className="card"><div className="card-body"><h3>Best next move</h3><p className="hero-text" style={{ fontSize: "0.98rem", marginTop: 10 }}>Start with one node, follow the links, and test whether the pattern still holds when you look at civilizations far apart in time and geography.</p></div></section>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
