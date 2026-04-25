@@ -11,26 +11,20 @@
     <style>
       :root {
         --bg: #07070a;
-        --bg-2: #0c0c12;
-        --panel: rgba(17, 17, 23, 0.86);
-        --panel-2: rgba(24, 24, 31, 0.9);
-        --panel-3: rgba(33, 33, 43, 0.92);
+        --panel: rgba(15, 15, 20, 0.9);
+        --panel-2: rgba(22, 22, 30, 0.92);
         --text: #f5f7fb;
         --muted: #adb3c2;
         --muted-2: #7f8798;
         --border: rgba(255, 255, 255, 0.1);
         --accent: #eef2ff;
-        --accent-text: #0a0a0f;
+        --accent-text: #0b0c10;
         --accent-2: #9cc4ff;
-        --glow: rgba(138, 180, 255, 0.18);
-        --purple: rgba(184, 120, 255, 0.15);
-        --gold: rgba(255, 214, 102, 0.14);
+        --shadow: 0 24px 64px rgba(0, 0, 0, 0.34);
         --radius-xl: 28px;
         --radius-lg: 22px;
         --radius-md: 16px;
-        --shadow: 0 25px 60px rgba(0, 0, 0, 0.34);
       }
-
       * { box-sizing: border-box; }
       html, body {
         margin: 0;
@@ -48,425 +42,133 @@
       }
       a { color: inherit; text-decoration: none; }
       button, input { font: inherit; }
-      .page { min-height: 100vh; }
       .container { max-width: 1440px; margin: 0 auto; padding: 22px; }
       .grid { display: grid; gap: 22px; }
-      .hero-grid { grid-template-columns: 1.2fr 0.8fr; align-items: stretch; }
+      .hero-grid { grid-template-columns: 1.2fr 0.8fr; }
       .main-grid { grid-template-columns: 360px minmax(0, 1fr); align-items: start; }
       .card {
         position: relative;
         overflow: hidden;
-        background: linear-gradient(180deg, rgba(15,15,20,0.92), rgba(9,9,13,0.94));
+        background: linear-gradient(180deg, rgba(15,15,20,0.94), rgba(9,9,13,0.96));
         border: 1px solid var(--border);
         border-radius: var(--radius-xl);
         box-shadow: var(--shadow);
-        backdrop-filter: blur(18px);
+        backdrop-filter: blur(14px);
       }
       .card::before {
         content: "";
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: linear-gradient(140deg, rgba(255,255,255,0.04), transparent 25%, transparent 60%, rgba(255,255,255,0.02));
+        background: linear-gradient(140deg, rgba(255,255,255,0.04), transparent 28%, transparent 60%, rgba(255,255,255,0.02));
       }
       .card-body { position: relative; padding: 24px; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 8px;
+        border-radius: 999px; border: 1px solid var(--border);
+        background: rgba(255,255,255,0.05); padding: 9px 14px; font-size: 0.9rem;
+      }
       .hero-title {
-        margin: 0;
-        font-size: clamp(2.4rem, 4.7vw, 5rem);
+        margin: 16px 0 0;
+        font-size: clamp(2.5rem, 5vw, 5rem);
         line-height: 0.98;
         letter-spacing: -0.05em;
         max-width: 12ch;
       }
-      .hero-subtitle {
-        margin-top: 14px;
-        font-size: 1.07rem;
-        line-height: 1.82;
-        color: var(--muted);
-        max-width: 62ch;
-      }
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: rgba(255,255,255,0.05);
-        color: var(--text);
-        padding: 9px 14px;
-        font-size: 0.9rem;
-      }
-      .glow-chip {
-        background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 0 0 1px rgba(255,255,255,0.02), 0 0 40px rgba(138,180,255,0.1);
-      }
+      .hero-copy, .muted { color: var(--muted); }
+      .hero-copy { margin-top: 14px; font-size: 1.06rem; line-height: 1.82; max-width: 62ch; }
       .spine {
-        margin-top: 20px;
-        padding: 20px;
-        border-radius: var(--radius-lg);
-        border: 1px solid rgba(255,255,255,0.08);
-        background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-        line-height: 1.78;
-        color: #d9e0ec;
+        margin-top: 20px; padding: 20px; border-radius: var(--radius-lg);
+        border: 1px solid var(--border); background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+        color: #d9e0ec; line-height: 1.78;
       }
-      .hero-stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-        margin-top: 18px;
-      }
-      .stat {
-        padding: 16px;
-        border-radius: 20px;
-        border: 1px solid var(--border);
-        background: rgba(0,0,0,0.2);
+      .hero-stats, .flash-grid, .footer-grid, .metric-row { display: grid; gap: 14px; }
+      .hero-stats, .metric-row, .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .flash-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 14px; }
+      .stat, .metric-box, .flash-card, .example-card, .source-link, .timeline-event, .cross-link {
+        border: 1px solid var(--border); border-radius: 20px; background: rgba(0,0,0,0.2); padding: 16px;
       }
       .stat-number { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.03em; }
-      .stat-label { margin-top: 6px; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
-      .hero-orbit {
-        position: absolute;
-        right: -110px;
-        top: -110px;
-        width: 340px;
-        height: 340px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(156,196,255,0.18) 0%, rgba(156,196,255,0.08) 30%, transparent 68%);
-        filter: blur(6px);
-        pointer-events: none;
+      .stat-label, .small, .example-note, .source-url, .cross-copy { color: var(--muted); line-height: 1.7; }
+      .top-strip { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; margin-top: 22px; }
+      .story-paths, .toggle-row, .small-toggle-row, .navigator, .tag-row { display: flex; flex-wrap: wrap; gap: 10px; }
+      .path-btn, .toggle, .small-btn, .chip {
+        border: 1px solid var(--border); border-radius: 999px; background: rgba(255,255,255,0.03);
+        color: var(--text); padding: 10px 14px; cursor: pointer; transition: 0.18s ease;
       }
-      .insight-card {
-        height: 100%;
-        background:
-          radial-gradient(circle at top right, rgba(156,196,255,0.15), transparent 36%),
-          radial-gradient(circle at bottom left, rgba(184,120,255,0.11), transparent 34%),
-          linear-gradient(180deg, rgba(15,15,20,0.96), rgba(8,8,12,0.96));
+      .toggle { flex: 1; min-width: 92px; border-radius: 16px; }
+      .path-btn:hover, .toggle:hover, .small-btn:hover, .chip:hover, .node-btn:hover, .flash-card:hover, .source-link:hover, .cross-link:hover {
+        transform: translateY(-2px); border-color: rgba(255,255,255,0.18); box-shadow: 0 10px 30px rgba(0,0,0,0.18);
       }
-      .insight-text { color: var(--muted); line-height: 1.76; }
-      .meta-list { display: grid; gap: 12px; margin-top: 16px; }
-      .meta-item {
-        display: grid;
-        grid-template-columns: 36px 1fr;
-        gap: 12px;
-        padding: 14px;
-        border-radius: 18px;
-        border: 1px solid var(--border);
-        background: rgba(0,0,0,0.18);
+      .active-ui { background: var(--accent) !important; color: var(--accent-text) !important; border-color: var(--accent) !important; }
+      .eyebrow { color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.72rem; margin-bottom: 10px; }
+      h1, h2, h3, p { margin: 0; }
+      h2 { font-size: clamp(1.95rem, 2.8vw, 3.4rem); line-height: 1.02; letter-spacing: -0.04em; }
+      h3 { font-size: 1.12rem; }
+      .lead { margin-top: 12px; color: #d7deea; line-height: 1.82; font-size: 1.05rem; max-width: 62ch; }
+      .insight-banner {
+        padding: 16px 18px; border-radius: 22px; border: 1px solid rgba(156,196,255,0.24);
+        background: linear-gradient(135deg, rgba(156,196,255,0.12), rgba(184,120,255,0.1)); color: #e8eefc; line-height: 1.76;
       }
-      .meta-icon {
-        display: grid;
-        place-items: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 14px;
-        background: rgba(255,255,255,0.06);
-        color: var(--accent-2);
-      }
-      .top-strip {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 18px;
-        margin-top: 22px;
-      }
-      .story-paths {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 16px;
-      }
-      .path-btn, .small-btn, .toggle, .chip {
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        background: rgba(255,255,255,0.03);
-        color: var(--text);
-        padding: 10px 14px;
-        cursor: pointer;
-        transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-      }
-      .path-btn:hover, .small-btn:hover, .toggle:hover, .chip:hover, .node-btn:hover, .flash-card:hover, .source-link:hover, .timeline-event:hover, .cross-link:hover {
-        transform: translateY(-2px);
-        border-color: rgba(255,255,255,0.16);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-      }
-      .path-btn.active, .toggle.active, .node-btn.active, .small-btn.active {
-        background: var(--accent);
-        color: var(--accent-text);
-        border-color: var(--accent);
-      }
-      .node-btn.active .node-sub,
-      .node-btn.active .mini-chip,
-      .node-btn.active .node-icon {
-        color: rgba(10, 10, 15, 0.72);
-        border-color: rgba(10, 10, 15, 0.12);
-        background: rgba(10, 10, 15, 0.06);
-      }
-      .flash-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-      }
-      .flash-card {
-        padding: 16px;
-        border-radius: 22px;
-        border: 1px solid var(--border);
-        background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-        cursor: pointer;
-        transition: 0.18s ease;
-      }
-      .flash-kicker { color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.72rem; }
-      .flash-title { margin-top: 8px; font-weight: 700; font-size: 1rem; }
-      .flash-body { margin-top: 8px; color: var(--muted); line-height: 1.7; font-size: 0.95rem; }
-      .sidebar {
-        position: sticky;
-        top: 16px;
-        max-height: calc(100vh - 32px);
-        overflow: hidden;
-      }
-      .sidebar .card-body {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        height: 100%;
-        min-height: 0;
-      }
+      .sidebar { position: sticky; top: 16px; max-height: calc(100vh - 32px); }
+      .sidebar .card-body { display: flex; flex-direction: column; gap: 16px; height: 100%; min-height: 0; }
       .search-wrap { position: relative; }
       .search-input {
-        width: 100%;
-        background: rgba(255,255,255,0.03);
-        color: var(--text);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 14px 14px 14px 42px;
-        outline: none;
+        width: 100%; background: rgba(255,255,255,0.03); color: var(--text); border: 1px solid var(--border);
+        border-radius: 18px; padding: 14px 14px 14px 42px; outline: none;
       }
-      .search-input:focus {
-        border-color: rgba(156,196,255,0.45);
-        box-shadow: 0 0 0 4px rgba(156,196,255,0.08);
-      }
-      .search-icon {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--muted-2);
-      }
-      .toggle-row, .tag-row { display: flex; flex-wrap: wrap; gap: 10px; }
-      .toggle {
-        flex: 1;
-        min-width: 92px;
-        border-radius: 16px;
-        padding: 12px 14px;
-      }
-      .small-toggle-row {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      .node-list {
-        overflow: auto;
-        padding-right: 6px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        flex: 1;
-        min-height: 0;
-      }
+      .search-input:focus { border-color: rgba(156,196,255,0.45); box-shadow: 0 0 0 4px rgba(156,196,255,0.08); }
+      .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted-2); }
+      .node-list { overflow: auto; display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; padding-right: 6px; }
       .node-btn {
-        width: 100%;
-        text-align: left;
-        padding: 16px;
-        border-radius: 24px;
-        border: 1px solid var(--border);
-        background: rgba(255,255,255,0.02);
-        color: var(--text);
-        cursor: pointer;
-        transition: 0.18s ease;
+        width: 100%; text-align: left; padding: 16px; border-radius: 24px; border: 1px solid var(--border);
+        background: rgba(255,255,255,0.02); color: var(--text); cursor: pointer; transition: 0.18s ease;
       }
-      .node-top {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-      }
+      .node-top { display: flex; gap: 12px; align-items: flex-start; }
       .node-icon {
-        flex: 0 0 auto;
-        width: 38px;
-        height: 38px;
-        border-radius: 14px;
-        display: grid;
-        place-items: center;
-        background: rgba(255,255,255,0.06);
-        color: var(--accent-2);
+        width: 38px; height: 38px; border-radius: 14px; display: grid; place-items: center;
+        background: rgba(255,255,255,0.06); color: var(--accent-2); flex: 0 0 auto;
       }
       .node-title { font-weight: 700; }
       .node-sub { margin-top: 7px; color: var(--muted); line-height: 1.62; font-size: 0.95rem; }
-      .node-links { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
       .mini-chip {
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.08);
-        color: var(--muted-2);
-        padding: 6px 10px;
-        font-size: 0.76rem;
+        display: inline-block; margin-top: 10px; margin-right: 8px; padding: 6px 10px; font-size: 0.76rem;
+        border-radius: 999px; border: 1px solid rgba(255,255,255,0.08); color: var(--muted-2);
       }
       .content-card { min-height: 74vh; }
-      .eyebrow {
-        color: var(--muted-2);
-        text-transform: uppercase;
-        letter-spacing: 0.16em;
-        font-size: 0.72rem;
-        margin-bottom: 10px;
-      }
-      h2, h3, h4, p { margin: 0; }
-      h2 {
-        font-size: clamp(1.9rem, 2.8vw, 3.4rem);
-        line-height: 1.02;
-        letter-spacing: -0.04em;
-      }
-      h3 { font-size: 1.1rem; }
-      .lead {
-        margin-top: 12px;
-        color: #d7deea;
-        line-height: 1.82;
-        font-size: 1.05rem;
-        max-width: 62ch;
+      .two-grid, .split-grid, .library-grid { display: grid; gap: 18px; }
+      .two-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split-grid { grid-template-columns: 1.08fr 0.92fr; }
+      .library-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 24px; }
+      .inner-card {
+        border-radius: 24px; border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)); padding: 20px;
       }
       .stack { display: flex; flex-direction: column; gap: 16px; }
-      .split-grid { display: grid; gap: 18px; grid-template-columns: 1.08fr 0.92fr; }
-      .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .three-grid { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .inner-card {
-        border-radius: 24px;
-        border: 1px solid var(--border);
-        background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
-        padding: 20px;
-      }
-      .metric-row {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-      }
-      .metric-box {
-        padding: 14px;
-        border-radius: 18px;
-        border: 1px solid var(--border);
-        background: rgba(0,0,0,0.2);
-      }
-      .metric-label { color: var(--muted-2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; }
-      .metric-value { margin-top: 8px; font-size: 1rem; line-height: 1.5; }
-      .chip { padding: 8px 12px; }
-      .insight-banner {
-        padding: 16px 18px;
-        border-radius: 22px;
-        border: 1px solid rgba(156,196,255,0.24);
-        background: linear-gradient(135deg, rgba(156,196,255,0.12), rgba(184,120,255,0.1));
-        color: #e8eefc;
-        line-height: 1.76;
-      }
-      .example-card, .source-link, .timeline-event, .cross-link {
-        display: block;
-        border-radius: 20px;
-        border: 1px solid var(--border);
-        background: rgba(0,0,0,0.18);
-        padding: 16px;
-        transition: 0.18s ease;
-      }
-      .example-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-      }
-      .example-title, .source-title { font-weight: 700; }
-      .example-note, .source-url, .small, .cross-copy { color: var(--muted); line-height: 1.72; }
-      .insight-pulse {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--accent-2);
-        font-size: 0.87rem;
-        margin-top: 10px;
-      }
-      .pulse-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--accent-2);
-        box-shadow: 0 0 0 0 rgba(156,196,255,0.5);
-        animation: pulse 2s infinite;
-      }
-      @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(156,196,255,0.5); }
-        70% { box-shadow: 0 0 0 10px rgba(156,196,255,0); }
-        100% { box-shadow: 0 0 0 0 rgba(156,196,255,0); }
-      }
-      .source-url { font-size: 0.82rem; margin-top: 8px; word-break: break-word; }
-      .timeline { position: relative; display: flex; flex-direction: column; gap: 12px; }
-      .timeline-event { position: relative; padding-left: 18px; }
-      .timeline-event::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 18px;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--accent-2);
-      }
-      .timeline-era { color: var(--muted-2); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; }
+      .timeline { display: flex; flex-direction: column; gap: 12px; }
+      .timeline-era { color: var(--muted-2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; }
       .cross-grid { display: grid; gap: 12px; }
-      .cross-link { cursor: pointer; }
-      .cross-title { font-weight: 700; margin-bottom: 6px; }
-      .navigator {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 12px;
-      }
-      .library-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .footer-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 22px; }
-      .footer-card { min-height: 100%; }
-      .empty-state {
-        color: var(--muted);
-        line-height: 1.78;
-        padding: 10px 0 4px;
-        border-radius: 18px;
-      }
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-      .footer-note {
-        margin-top: 12px;
-        color: var(--muted-2);
-        font-size: 0.9rem;
-        line-height: 1.68;
-      }
+      .cross-link { cursor: pointer; text-align: left; color: var(--text); }
+      .cross-title, .source-title, .example-title { font-weight: 700; }
+      .source-url { margin-top: 8px; font-size: 0.82rem; word-break: break-word; }
+      .empty-state { color: var(--muted); line-height: 1.78; padding: 10px 0 4px; }
+      .footer-note { margin-top: 12px; color: var(--muted-2); font-size: 0.9rem; line-height: 1.68; }
       @media (max-width: 1200px) {
-        .hero-grid, .main-grid, .top-strip, .split-grid, .two-grid, .three-grid, .flash-grid, .footer-grid, .library-grid, .hero-stats, .metric-row { grid-template-columns: 1fr; }
+        .hero-grid, .main-grid, .top-strip, .hero-stats, .flash-grid, .metric-row, .two-grid, .split-grid, .footer-grid, .library-grid { grid-template-columns: 1fr; }
         .sidebar { position: static; max-height: none; }
         .hero-title { max-width: none; }
       }
       @media (max-width: 760px) {
         .container { padding: 16px; }
         .card-body { padding: 18px; }
-        .hero-subtitle, .lead, .spine { font-size: 0.98rem; }
+        .hero-copy, .lead, .spine { font-size: 0.98rem; }
       }
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div class="container" id="app"></div>
 
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <script type="text/babel">
-      const { useMemo, useState, useEffect } = React;
-
+    <script>
       const themes = [
         {
           id: "survival-kinship",
@@ -591,7 +293,7 @@
           thesis: "Religions repeatedly carve ordinary reality into charged zones: temple, shrine, altar, mountain, tomb, pilgrimage route, holy day, fast, sabbath, and festival season.",
           whyItRepeats: "Marking some places and times as special helps groups enter shared seriousness and orient memory, hierarchy, and identity.",
           insight: "A sacred place is not just a location. It is an argument that reality has gradients, that some coordinates matter more than others.",
-          flash: "Pilgrimage is geography turned into meaning. The road itself becomes doctrine with footsteps." ,
+          flash: "Pilgrimage is geography turned into meaning. The road itself becomes doctrine with footsteps.",
           examples: [
             { label: "Pilgrimage traditions", note: "Hajj, Kumbh Mela, Jerusalem, Bodh Gaya, shrines, saint tombs, and sacred mountains all convert geography into meaning." },
             { label: "Temples, shrines, and precincts", note: "From Mesopotamian temenos to Egyptian temples to household altars, sacred architecture organizes access to power." },
@@ -652,426 +354,273 @@
 
       const flashCards = [
         {
-          id: "flash-1",
           kicker: "First principle",
           title: "Religion often answers recurring human conditions, not one-time historical accidents.",
           body: "Across distance and time, the same pressures return: vulnerability, death, uncertainty, conflict, memory, and the need for durable belonging."
         },
         {
-          id: "flash-2",
           kicker: "Design insight",
           title: "Ritual is memory made physical.",
           body: "It lets a group carry meaning even when not everyone can explain the doctrine in abstract terms."
         },
         {
-          id: "flash-3",
           kicker: "Civilizational move",
           title: "Law becomes stickier when attached to the cosmos.",
           body: "Sacred framing turns preference into obligation and disagreement into disorder."
         }
       ];
 
-      function App() {
-        const [query, setQuery] = useState("");
-        const [selected, setSelected] = useState("death-afterlife");
-        const [mode, setMode] = useState("map");
-        const [detailView, setDetailView] = useState("insight");
-        const [flashIndex, setFlashIndex] = useState(0);
+      const state = {
+        query: "",
+        selected: "death-afterlife",
+        mode: "map",
+        detailView: "insight",
+        flashIndex: 0
+      };
 
-        const filteredThemes = useMemo(() => {
-          const q = query.trim().toLowerCase();
-          if (!q) return themes;
-          return themes.filter((theme) => {
-            const haystack = [
-              theme.title,
-              theme.shortTitle,
-              theme.thesis,
-              theme.whyItRepeats,
-              theme.insight,
-              theme.flash,
-              ...(theme.tags || []),
-              ...theme.examples.flatMap((e) => [e.label, e.note]),
-              ...theme.timeline.flatMap((t) => [t.era, t.note]),
-              ...theme.links.map((l) => l.title)
-            ].join(" ").toLowerCase();
-            return haystack.includes(q);
-          });
-        }, [query]);
+      const app = document.getElementById('app');
 
-        const active = filteredThemes.find((t) => t.id === selected) || filteredThemes[0] || themes[0];
-        const activeJourney = guidedJourneys.find((j) => j.id === selected);
-        const flash = flashCards[flashIndex % flashCards.length];
-
-        useEffect(() => {
-          if (!filteredThemes.some((t) => t.id === selected) && filteredThemes[0]) {
-            setSelected(filteredThemes[0].id);
-          }
-        }, [filteredThemes, selected]);
-
-        useEffect(() => {
-          const interval = setInterval(() => {
-            setFlashIndex((value) => (value + 1) % flashCards.length);
-          }, 5200);
-          return () => clearInterval(interval);
-        }, []);
-
-        const relatedThemes = active ? active.pathways.map((id) => themes.find((theme) => theme.id === id)).filter(Boolean) : [];
-
-        return (
-          <div className="page">
-            <div className="container">
-              <div className="grid hero-grid" aria-label="Exploratorium introduction">
-                <section className="card">
-                  <div className="hero-orbit"></div>
-                  <div className="card-body">
-                    <div className="pill glow-chip">◌ Religion + History Exploratorium</div>
-                    <h1 className="hero-title" style={{ marginTop: 18 }}>Big stories, repeated structures, recurring gods</h1>
-                    <p className="hero-subtitle">
-                      A richer, more interactive browser-based map of common patterns across documented religions and historical societies: kinship, death,
-                      ritual, law, sacred space, and symbolic world-building.
-                    </p>
-                    <div className="spine">
-                      <strong style={{ color: "#fafafa" }}>Core spine:</strong> People are small and life is scary. So people stay together, make rules,
-                      and tell big stories to help them feel safe. When lots of people believe the same big story for a very long time, that story can start behaving like a god.
-                    </div>
-
-                    <div className="hero-stats">
-                      <div className="stat">
-                        <div className="stat-number">6</div>
-                        <div className="stat-label">structural pattern nodes that recur across religions and civilizations</div>
-                      </div>
-                      <div className="stat">
-                        <div className="stat-number">24+</div>
-                        <div className="stat-label">cross-civilizational examples and historical touchpoints</div>
-                      </div>
-                      <div className="stat">
-                        <div className="stat-number">1</div>
-                        <div className="stat-label">central question: what do humans keep building when life feels fragile?</div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                <aside className="card insight-card">
-                  <div className="card-body">
-                    <div className="eyebrow">How to navigate</div>
-                    <h3 style={{ fontSize: "1.35rem" }}>Every click should collapse complexity into one clean idea.</h3>
-                    <p className="insight-text" style={{ marginTop: 12 }}>
-                      This experience does not claim to prove metaphysics. It shows that recurring human conditions repeatedly generate recurring religious structures.
-                    </p>
-                    <div className="meta-list">
-                      <div className="meta-item">
-                        <div className="meta-icon">✦</div>
-                        <div>
-                          <div style={{ fontWeight: 700 }}>Start with a guided path</div>
-                          <div className="small">Choose death, ritual, law, or gods and move outward from one strong insight.</div>
-                        </div>
-                      </div>
-                      <div className="meta-item">
-                        <div className="meta-icon">◎</div>
-                        <div>
-                          <div style={{ fontWeight: 700 }}>Use cross-links</div>
-                          <div className="small">The point is not isolated topics. The point is how each pattern feeds the others.</div>
-                        </div>
-                      </div>
-                      <div className="meta-item">
-                        <div className="meta-icon">→</div>
-                        <div>
-                          <div style={{ fontWeight: 700 }}>Leave through evidence</div>
-                          <div className="small">Each node sends you outward to reference sources, museum essays, and philosophy entries.</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="insight-pulse"><span className="pulse-dot"></span> rotating insight engine active</div>
-                  </div>
-                </aside>
-              </div>
-
-              <div className="top-strip">
-                <section className="card">
-                  <div className="card-body">
-                    <div className="eyebrow">Guided journeys</div>
-                    <h3 style={{ fontSize: "1.25rem" }}>Choose a path that reveals the machinery.</h3>
-                    <div className="story-paths">
-                      {guidedJourneys.map((journey) => (
-                        <button
-                          key={journey.id}
-                          className={`path-btn ${selected === journey.id ? "active" : ""}`}
-                          onClick={() => {
-                            setSelected(journey.id);
-                            setMode("map");
-                          }}
-                        >
-                          {journey.label}
-                        </button>
-                      ))}
-                    </div>
-                    <p className="footer-note">
-                      {activeJourney ? activeJourney.description : "Choose one entry point and let the cross-links do the rest."}
-                    </p>
-                  </div>
-                </section>
-
-                <section className="card">
-                  <div className="card-body">
-                    <div className="eyebrow">Flash of insight</div>
-                    <div className="flash-grid">
-                      {flashCards.map((card, idx) => (
-                        <button
-                          key={card.id}
-                          className="flash-card"
-                          onClick={() => setFlashIndex(idx)}
-                          style={{
-                            borderColor: idx === flashIndex ? "rgba(156,196,255,0.35)" : undefined,
-                            background: idx === flashIndex ? "linear-gradient(180deg, rgba(156,196,255,0.12), rgba(255,255,255,0.03))" : undefined
-                          }}
-                        >
-                          <div className="flash-kicker">{card.kicker}</div>
-                          <div className="flash-title">{card.title}</div>
-                          <div className="flash-body">{card.body}</div>
-                        </button>
-                      ))}
-                    </div>
-                    <div className="insight-banner" style={{ marginTop: 14 }}>
-                      <strong>{flash.title}</strong> {flash.body}
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              <div className="grid main-grid" style={{ marginTop: 22 }}>
-                <aside className="card sidebar" aria-label="Navigation sidebar">
-                  <div className="card-body">
-                    <label className="sr-only" htmlFor="theme-search">Search patterns</label>
-                    <div className="search-wrap">
-                      <span className="search-icon">⌕</span>
-                      <input
-                        id="theme-search"
-                        className="search-input"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search death, burial, pilgrimage, law, ancestor..."
-                      />
-                    </div>
-
-                    <div className="toggle-row" role="tablist" aria-label="View mode">
-                      <button className={`toggle ${mode === "map" ? "active" : ""}`} onClick={() => setMode("map")} aria-pressed={mode === "map"}>Map</button>
-                      <button className={`toggle ${mode === "library" ? "active" : ""}`} onClick={() => setMode("library")} aria-pressed={mode === "library"}>Library</button>
-                    </div>
-
-                    <div className="small-toggle-row" aria-label="Detail mode">
-                      <button className={`small-btn ${detailView === "insight" ? "active" : ""}`} onClick={() => setDetailView("insight")}>Insight</button>
-                      <button className={`small-btn ${detailView === "timeline" ? "active" : ""}`} onClick={() => setDetailView("timeline")}>Timeline</button>
-                      <button className={`small-btn ${detailView === "crosslinks" ? "active" : ""}`} onClick={() => setDetailView("crosslinks")}>Cross-links</button>
-                    </div>
-
-                    <div className="node-list" aria-label="Pattern nodes">
-                      {filteredThemes.length === 0 ? (
-                        <div className="empty-state">No matches. Try broader terms like <em>death</em>, <em>law</em>, <em>ancestor</em>, or <em>pilgrimage</em>.</div>
-                      ) : (
-                        filteredThemes.map((theme) => (
-                          <button
-                            key={theme.id}
-                            className={`node-btn ${active && active.id === theme.id ? "active" : ""}`}
-                            onClick={() => setSelected(theme.id)}
-                          >
-                            <div className="node-top">
-                              <div className="node-icon">{theme.icon}</div>
-                              <div>
-                                <div className="node-title">{theme.title}</div>
-                                <div className="node-sub">{theme.thesis}</div>
-                              </div>
-                            </div>
-                            <div className="node-links">
-                              {theme.tags.slice(0, 3).map((tag) => <span key={tag} className="mini-chip">{tag}</span>)}
-                            </div>
-                          </button>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </aside>
-
-                <main className="card content-card" aria-live="polite">
-                  <div className="card-body">
-                    {mode === "map" && active ? (
-                      <div className="stack">
-                        <div>
-                          <div className="pill glow-chip">{active.icon} Pattern Node</div>
-                          <h2 style={{ marginTop: 16 }}>{active.title}</h2>
-                          <p className="lead">{active.thesis}</p>
-                          <div className="navigator">
-                            {relatedThemes.map((theme) => (
-                              <button key={theme.id} className="chip" onClick={() => setSelected(theme.id)}>
-                                Jump to {theme.shortTitle}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="metric-row">
-                          <div className="metric-box">
-                            <div className="metric-label">Core function</div>
-                            <div className="metric-value">{active.tags[0]} becomes a gateway into larger order.</div>
-                          </div>
-                          <div className="metric-box">
-                            <div className="metric-label">Structural move</div>
-                            <div className="metric-value">Private vulnerability is converted into shared pattern.</div>
-                          </div>
-                          <div className="metric-box">
-                            <div className="metric-label">What it builds</div>
-                            <div className="metric-value">Durability across memory, bodies, and generations.</div>
-                          </div>
-                        </div>
-
-                        <div className="insight-banner">
-                          <strong>Flash insight:</strong> {active.flash}
-                        </div>
-
-                        <div className="two-grid">
-                          <section className="inner-card">
-                            <div className="eyebrow">Why it repeats</div>
-                            <p className="lead" style={{ marginTop: 0 }}>{active.whyItRepeats}</p>
-                          </section>
-                          <section className="inner-card">
-                            <div className="eyebrow">Primary insight</div>
-                            <p className="lead" style={{ marginTop: 0 }}>{active.insight}</p>
-                          </section>
-                        </div>
-
-                        <div className="split-grid">
-                          <section className="inner-card">
-                            <div className="eyebrow">Examples across history and religion</div>
-                            <h3 style={{ marginBottom: 14 }}>Not identical beliefs. Repeating structural moves.</h3>
-                            <div className="stack">
-                              {active.examples.map((example, idx) => (
-                                <article className="example-card" key={idx}>
-                                  <div className="example-top">
-                                    <div className="example-title">{example.label}</div>
-                                    <div className="mini-chip">Example {idx + 1}</div>
-                                  </div>
-                                  <div className="example-note" style={{ marginTop: 8 }}>{example.note}</div>
-                                </article>
-                              ))}
-                            </div>
-                          </section>
-
-                          <section className="inner-card">
-                            <div className="eyebrow">
-                              {detailView === "timeline" ? "Timeline lens" : detailView === "crosslinks" ? "Cross-links" : "Further exploration"}
-                            </div>
-                            {detailView === "timeline" ? (
-                              <div>
-                                <h3 style={{ marginBottom: 14 }}>How the pattern unfolds over time</h3>
-                                <div className="timeline">
-                                  {active.timeline.map((item, idx) => (
-                                    <div className="timeline-event" key={idx}>
-                                      <div className="timeline-era">{item.era}</div>
-                                      <div className="example-note" style={{ marginTop: 6 }}>{item.note}</div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            ) : detailView === "crosslinks" ? (
-                              <div>
-                                <h3 style={{ marginBottom: 14 }}>Where this node connects</h3>
-                                <div className="cross-grid">
-                                  {relatedThemes.map((theme) => (
-                                    <button key={theme.id} className="cross-link" onClick={() => setSelected(theme.id)}>
-                                      <div className="cross-title">{theme.icon} {theme.title}</div>
-                                      <div className="cross-copy">{theme.thesis}</div>
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            ) : (
-                              <div>
-                                <h3 style={{ marginBottom: 14 }}>Open reference trails</h3>
-                                <div className="stack">
-                                  {active.links.map((link) => (
-                                    <a className="source-link" key={link.url} href={link.url} target="_blank" rel="noreferrer noopener">
-                                      <div className="source-title">{link.title} ↗</div>
-                                      <div className="source-url">{link.url}</div>
-                                    </a>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </section>
-                        </div>
-                      </div>
-                    ) : (
-                      <div>
-                        <div className="eyebrow">Source library</div>
-                        <h2>Browse evidence by pattern</h2>
-                        <p className="lead">This is the source-first view: move from node to reference without losing the larger architecture.</p>
-                        {filteredThemes.length === 0 ? (
-                          <div className="empty-st{filteredThemes.map((theme) => (
-                            <section className="inner-card" key={theme.id}>
-                              <div className="eyebrow">{theme.icon} {theme.tags.join(" • ")}</div>
-                              <h3 style={{ marginBottom: 10 }}>{theme.title}</h3>
-                              <p className="small" style={{ lineHeight: 1.75, marginBottom: 16 }}>{theme.thesis}</p>
-                              <div className="stack">
-                                {theme.links.map((link) => (
-                                  <a className="source-link" key={link.url} href={link.url} target="_blank" rel="noreferrer noopener">
-                                    <div className="source-title">{link.title} ↗</div>
-                                  </a>
-                                ))}
-                              </div>
-                              <div className="navigator" style={{ marginTop: 14 }}>
-                                <button className="chip" onClick={() => { setSelected(theme.id); setMode("map"); }}>Open node</button>
-                              </div>
-                            </section>
-                          ))}
-                          </div>
-                        )}
-                      </div>button className="chip" onClick={() => { setSelected(theme.id); setMode("map"); }}>Open node</button>
-                              </div>
-                            </section>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </main>
-              </div>
-
-              <div className="footer-grid">
-                <section className="card footer-card">
-                  <div className="card-body">
-                    <div className="eyebrow">What this suggests</div>
-                    <h3>Religions differ in content, but often solve the same classes of problems.</h3>
-                    <p className="hero-subtitle" style={{ marginTop: 10 }}>
-                      Mortality, order, belonging, uncertainty, memory, and symbolic cohesion recur so often that similar sacred structures keep reappearing.
-                    </p>
-                  </div>
-                </section>
-                <section className="card footer-card">
-                  <div className="card-body">
-                    <div className="eyebrow">What it does not claim</div>
-                    <h3>This is a map of commonality, not a final verdict on metaphysics.</h3>
-                    <p className="hero-subtitle" style={{ marginTop: 10 }}>
-                      It does not prove or disprove any deity. It shows how recurring human conditions repeatedly generate recurring religious forms.
-                    </p>
-                  </div>
-                </section>
-                <section className="card footer-card">
-                  <div className="card-body">
-                    <div className="eyebrow">Best next move</div>
-                    <h3>Follow one node all the way outward.</h3>
-                    <p className="hero-subtitle" style={{ marginTop: 10 }}>
-                      Start with death, ritual, law, or gods. Then test the pattern against civilizations far apart in geography, time, and doctrine.
-                    </p>
-                  </div>
-                </section>
-              </div>
-            </div>
-          </div>
-        );
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
       }
 
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(<App />);
+      function filteredThemes() {
+        const q = state.query.trim().toLowerCase();
+        if (!q) return themes;
+        return themes.filter((theme) => {
+          const haystack = [
+            theme.title,
+            theme.shortTitle,
+            theme.thesis,
+            theme.whyItRepeats,
+            theme.insight,
+            theme.flash,
+            ...(theme.tags || []),
+            ...theme.examples.flatMap((e) => [e.label, e.note]),
+            ...theme.timeline.flatMap((t) => [t.era, t.note]),
+            ...theme.links.map((l) => l.title)
+          ].join(' ').toLowerCase();
+          return haystack.includes(q);
+        });
+      }
+
+      function activeTheme(filtered) {
+        return filtered.find((t) => t.id === state.selected) || filtered[0] || themes[0];
+      }
+
+      function buttonClass(base, active) {
+        return active ? `${base} active-ui` : base;
+      }
+
+      function render() {
+        const filtered = filteredThemes();
+        if (!filtered.some((t) => t.id === state.selected) && filtered[0]) state.selected = filtered[0].id;
+        const active = activeTheme(filtered);
+        const related = active ? active.pathways.map((id) => themes.find((theme) => theme.id === id)).filter(Boolean) : [];
+        const journey = guidedJourneys.find((j) => j.id === state.selected);
+        const flash = flashCards[state.flashIndex % flashCards.length];
+
+        app.innerHTML = `
+          <div class="grid hero-grid">
+            <section class="card">
+              <div class="card-body">
+                <div class="pill">◌ Religion + History Exploratorium</div>
+                <h1 class="hero-title">Big stories, repeated structures, recurring gods</h1>
+                <p class="hero-copy">A richer, more interactive browser-based map of common patterns across documented religions and historical societies: kinship, death, ritual, law, sacred space, and symbolic world-building.</p>
+                <div class="spine"><strong style="color:#fafafa">Core spine:</strong> People are small and life is scary. So people stay together, make rules, and tell big stories to help them feel safe. When lots of people believe the same big story for a very long time, that story can start behaving like a god.</div>
+                <div class="hero-stats">
+                  <div class="stat"><div class="stat-number">6</div><div class="stat-label">structural pattern nodes that recur across religions and civilizations</div></div>
+                  <div class="stat"><div class="stat-number">24+</div><div class="stat-label">cross-civilizational examples and historical touchpoints</div></div>
+                  <div class="stat"><div class="stat-number">1</div><div class="stat-label">central question: what do humans keep building when life feels fragile?</div></div>
+                </div>
+              </div>
+            </section>
+            <aside class="card">
+              <div class="card-body">
+                <div class="eyebrow">How to navigate</div>
+                <h3 style="font-size:1.35rem">Every click should collapse complexity into one clean idea.</h3>
+                <p class="hero-copy" style="margin-top:12px">This experience does not claim to prove metaphysics. It shows that recurring human conditions repeatedly generate recurring religious structures.</p>
+                <div class="stack" style="margin-top:16px">
+                  <div class="stat"><strong>✦ Start with a guided path</strong><div class="small" style="margin-top:8px">Choose death, ritual, law, or gods and move outward from one strong insight.</div></div>
+                  <div class="stat"><strong>◎ Use cross-links</strong><div class="small" style="margin-top:8px">The point is not isolated topics. The point is how each pattern feeds the others.</div></div>
+                  <div class="stat"><strong>→ Leave through evidence</strong><div class="small" style="margin-top:8px">Each node sends you outward to reference sources, museum essays, and philosophy entries.</div></div>
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          <div class="top-strip">
+            <section class="card"><div class="card-body">
+              <div class="eyebrow">Guided journeys</div>
+              <h3 style="font-size:1.25rem">Choose a path that reveals the machinery.</h3>
+              <div class="story-paths">
+                ${guidedJourneys.map((j) => `<button class="${buttonClass('path-btn', state.selected === j.id)}" data-select="${j.id}">${escapeHtml(j.label)}</button>`).join('')}
+              </div>
+              <p class="footer-note">${escapeHtml(journey ? journey.description : 'Choose one entry point and let the cross-links do the rest.')}</p>
+            </div></section>
+            <section class="card"><div class="card-body">
+              <div class="eyebrow">Flash of insight</div>
+              <div class="flash-grid">
+                ${flashCards.map((card, idx) => `<button class="flash-card" data-flash="${idx}" style="${idx === state.flashIndex ? 'border-color: rgba(156,196,255,0.35); background: linear-gradient(180deg, rgba(156,196,255,0.12), rgba(255,255,255,0.03));' : ''}"><div class="eyebrow" style="margin-bottom:8px">${escapeHtml(card.kicker)}</div><div class="example-title">${escapeHtml(card.title)}</div><div class="small" style="margin-top:8px">${escapeHtml(card.body)}</div></button>`).join('')}
+              </div>
+              <div class="insight-banner" style="margin-top:14px"><strong>${escapeHtml(flash.title)}</strong> ${escapeHtml(flash.body)}</div>
+            </div></section>
+          </div>
+
+          <div class="grid main-grid" style="margin-top:22px">
+            <aside class="card sidebar">
+              <div class="card-body">
+                <div class="search-wrap">
+                  <span class="search-icon">⌕</span>
+                  <input id="theme-search" class="search-input" value="${escapeHtml(state.query)}" placeholder="Search death, burial, pilgrimage, law, ancestor..." />
+                </div>
+                <div class="toggle-row">
+                  <button class="${buttonClass('toggle', state.mode === 'map')}" data-mode="map">Map</button>
+                  <button class="${buttonClass('toggle', state.mode === 'library')}" data-mode="library">Library</button>
+                </div>
+                <div class="small-toggle-row">
+                  <button class="${buttonClass('small-btn', state.detailView === 'insight')}" data-detail="insight">Insight</button>
+                  <button class="${buttonClass('small-btn', state.detailView === 'timeline')}" data-detail="timeline">Timeline</button>
+                  <button class="${buttonClass('small-btn', state.detailView === 'crosslinks')}" data-detail="crosslinks">Cross-links</button>
+                </div>
+                <div class="node-list">
+                  ${filtered.length === 0 ? `<div class="empty-state">No matches. Try broader terms like <em>death</em>, <em>law</em>, <em>ancestor</em>, or <em>pilgrimage</em>.</div>` : filtered.map((theme) => `
+                    <button class="${buttonClass('node-btn', active && active.id === theme.id)}" data-select="${theme.id}">
+                      <div class="node-top">
+                        <div class="node-icon">${escapeHtml(theme.icon)}</div>
+                        <div>
+                          <div class="node-title">${escapeHtml(theme.title)}</div>
+                          <div class="node-sub">${escapeHtml(theme.thesis)}</div>
+                        </div>
+                      </div>
+                      <div>${theme.tags.slice(0,3).map((tag) => `<span class="mini-chip">${escapeHtml(tag)}</span>`).join('')}</div>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </aside>
+
+            <main class="card content-card">
+              <div class="card-body">
+                ${state.mode === 'map' && active ? renderMap(active, related) : renderLibrary(filtered)}
+              </div>
+            </main>
+          </div>
+
+          <div class="footer-grid" style="margin-top:22px">
+            <section class="card"><div class="card-body"><div class="eyebrow">What this suggests</div><h3>Religions differ in content, but often solve the same classes of problems.</h3><p class="hero-copy" style="margin-top:10px">Mortality, order, belonging, uncertainty, memory, and symbolic cohesion recur so often that similar sacred structures keep reappearing.</p></div></section>
+            <section class="card"><div class="card-body"><div class="eyebrow">What it does not claim</div><h3>This is a map of commonality, not a final verdict on metaphysics.</h3><p class="hero-copy" style="margin-top:10px">It does not prove or disprove any deity. It shows how recurring human conditions repeatedly generate recurring religious forms.</p></div></section>
+            <section class="card"><div class="card-body"><div class="eyebrow">Best next move</div><h3>Follow one node all the way outward.</h3><p class="hero-copy" style="margin-top:10px">Start with death, ritual, law, or gods. Then test the pattern against civilizations far apart in geography, time, and doctrine.</p></div></section>
+          </div>
+        `;
+
+        bindEvents();
+      }
+
+      function renderMap(active, related) {
+        const detailPanel = state.detailView === 'timeline'
+          ? `<div><div class="eyebrow">Timeline lens</div><h3 style="margin-bottom:14px">How the pattern unfolds over time</h3><div class="timeline">${active.timeline.map((item) => `<div class="timeline-event"><div class="timeline-era">${escapeHtml(item.era)}</div><div class="small" style="margin-top:6px">${escapeHtml(item.note)}</div></div>`).join('')}</div></div>`
+          : state.detailView === 'crosslinks'
+            ? `<div><div class="eyebrow">Cross-links</div><h3 style="margin-bottom:14px">Where this node connects</h3><div class="cross-grid">${related.map((theme) => `<button class="cross-link" data-select="${theme.id}"><div class="cross-title">${escapeHtml(theme.icon)} ${escapeHtml(theme.title)}</div><div class="cross-copy">${escapeHtml(theme.thesis)}</div></button>`).join('')}</div></div>`
+            : `<div><div class="eyebrow">Further exploration</div><h3 style="margin-bottom:14px">Open reference trails</h3><div class="stack">${active.links.map((link) => `<a class="source-link" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer noopener"><div class="source-title">${escapeHtml(link.title)} ↗</div><div class="source-url">${escapeHtml(link.url)}</div></a>`).join('')}</div></div>`;
+
+        return `
+          <div class="stack">
+            <div>
+              <div class="pill">${escapeHtml(active.icon)} Pattern Node</div>
+              <h2 style="margin-top:16px">${escapeHtml(active.title)}</h2>
+              <p class="lead">${escapeHtml(active.thesis)}</p>
+              <div class="navigator">${related.map((theme) => `<button class="chip" data-select="${theme.id}">Jump to ${escapeHtml(theme.shortTitle)}</button>`).join('')}</div>
+            </div>
+            <div class="metric-row">
+              <div class="metric-box"><div class="eyebrow">Core function</div><div>${escapeHtml(active.tags[0])} becomes a gateway into larger order.</div></div>
+              <div class="metric-box"><div class="eyebrow">Structural move</div><div>Private vulnerability is converted into shared pattern.</div></div>
+              <div class="metric-box"><div class="eyebrow">What it builds</div><div>Durability across memory, bodies, and generations.</div></div>
+            </div>
+            <div class="insight-banner"><strong>Flash insight:</strong> ${escapeHtml(active.flash)}</div>
+            <div class="two-grid">
+              <section class="inner-card"><div class="eyebrow">Why it repeats</div><p class="lead" style="margin-top:0">${escapeHtml(active.whyItRepeats)}</p></section>
+              <section class="inner-card"><div class="eyebrow">Primary insight</div><p class="lead" style="margin-top:0">${escapeHtml(active.insight)}</p></section>
+            </div>
+            <div class="split-grid">
+              <section class="inner-card"><div class="eyebrow">Examples across history and religion</div><h3 style="margin-bottom:14px">Not identical beliefs. Repeating structural moves.</h3><div class="stack">${active.examples.map((example, idx) => `<article class="example-card"><div class="example-title">${escapeHtml(example.label)}</div><div class="small" style="margin-top:8px">${escapeHtml(example.note)}</div></article>`).join('')}</div></section>
+              <section class="inner-card">${detailPanel}</section>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderLibrary(filtered) {
+        if (filtered.length === 0) return `<div class="empty-state">No source matches for this search yet. Try broader terms like <em>ritual</em>, <em>afterlife</em>, or <em>myth</em>.</div>`;
+        return `
+          <div>
+            <div class="eyebrow">Source library</div>
+            <h2>Browse evidence by pattern</h2>
+            <p class="lead">This is the source-first view: move from node to reference without losing the larger architecture.</p>
+            <div class="library-grid">
+              ${filtered.map((theme) => `
+                <section class="inner-card">
+                  <div class="eyebrow">${escapeHtml(theme.icon)} ${escapeHtml(theme.tags.join(' • '))}</div>
+                  <h3 style="margin-bottom:10px">${escapeHtml(theme.title)}</h3>
+                  <p class="small" style="margin-bottom:16px">${escapeHtml(theme.thesis)}</p>
+                  <div class="stack">${theme.links.map((link) => `<a class="source-link" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer noopener"><div class="source-title">${escapeHtml(link.title)} ↗</div></a>`).join('')}</div>
+                  <div class="navigator" style="margin-top:14px"><button class="chip" data-select="${theme.id}" data-map="1">Open node</button></div>
+                </section>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function bindEvents() {
+        const search = document.getElementById('theme-search');
+        if (search) {
+          search.addEventListener('input', (e) => {
+            state.query = e.target.value;
+            render();
+          });
+        }
+
+        document.querySelectorAll('[data-select]').forEach((el) => {
+          el.addEventListener('click', () => {
+            state.selected = el.getAttribute('data-select');
+            if (el.hasAttribute('data-map')) state.mode = 'map';
+            render();
+          });
+        });
+
+        document.querySelectorAll('[data-mode]').forEach((el) => {
+          el.addEventListener('click', () => {
+            state.mode = el.getAttribute('data-mode');
+            render();
+          });
+        });
+
+        document.querySelectorAll('[data-detail]').forEach((el) => {
+          el.addEventListener('click', () => {
+            state.detailView = el.getAttribute('data-detail');
+            render();
+          });
+        });
+
+        document.querySelectorAll('[data-flash]').forEach((el) => {
+          el.addEventListener('click', () => {
+            state.flashIndex = Number(el.getAttribute('data-flash')) || 0;
+            render();
+          });
+        });
+      }
+
+      render();
+      setInterval(() => {
+        state.flashIndex = (state.flashIndex + 1) % flashCards.length;
+        render();
+      }, 5200);
     </script>
   </body>
 </html>
