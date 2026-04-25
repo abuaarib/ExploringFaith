@@ -6,132 +6,454 @@
     <title>Religion + History Exploratorium</title>
     <meta
       name="description"
-      content="A browser-ready exploratorium of recurring structures across documented religions and historical societies."
+      content="An interactive browser-ready exploratorium of recurring structures across documented religions and historical societies."
     />
     <style>
       :root {
-        --bg: #09090b;
-        --panel: #111114;
-        --panel-2: #17171b;
-        --panel-3: #1f1f24;
-        --text: #f4f4f5;
-        --muted: #a1a1aa;
-        --muted-2: #71717a;
-        --border: #27272a;
-        --accent: #fafafa;
-        --accent-text: #0a0a0a;
-        --chip: #18181b;
-        --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+        --bg: #07070a;
+        --bg-2: #0c0c12;
+        --panel: rgba(17, 17, 23, 0.86);
+        --panel-2: rgba(24, 24, 31, 0.9);
+        --panel-3: rgba(33, 33, 43, 0.92);
+        --text: #f5f7fb;
+        --muted: #adb3c2;
+        --muted-2: #7f8798;
+        --border: rgba(255, 255, 255, 0.1);
+        --accent: #eef2ff;
+        --accent-text: #0a0a0f;
+        --accent-2: #9cc4ff;
+        --glow: rgba(138, 180, 255, 0.18);
+        --purple: rgba(184, 120, 255, 0.15);
+        --gold: rgba(255, 214, 102, 0.14);
         --radius-xl: 28px;
-        --radius-lg: 20px;
+        --radius-lg: 22px;
         --radius-md: 16px;
+        --shadow: 0 25px 60px rgba(0, 0, 0, 0.34);
       }
 
       * { box-sizing: border-box; }
-      html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      body {
+        background:
+          radial-gradient(circle at 0% 0%, rgba(255,255,255,0.05), transparent 22%),
+          radial-gradient(circle at 100% 10%, rgba(142,187,255,0.09), transparent 20%),
+          radial-gradient(circle at 80% 85%, rgba(178,119,255,0.08), transparent 22%),
+          linear-gradient(180deg, #08080b 0%, #07070a 100%);
+      }
       a { color: inherit; text-decoration: none; }
       button, input { font: inherit; }
-      .page {
-        min-height: 100vh;
-        background:
-          radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent 26%),
-          radial-gradient(circle at 85% 20%, rgba(255,255,255,0.03), transparent 22%),
-          linear-gradient(180deg, #0a0a0c 0%, #08080a 100%);
-      }
-      .container { max-width: 1360px; margin: 0 auto; padding: 24px; }
-      .grid { display: grid; gap: 24px; }
-      .hero-grid { grid-template-columns: 1.2fr 0.8fr; }
-      .main-grid { grid-template-columns: 340px 1fr; align-items: start; }
+      .page { min-height: 100vh; }
+      .container { max-width: 1440px; margin: 0 auto; padding: 22px; }
+      .grid { display: grid; gap: 22px; }
+      .hero-grid { grid-template-columns: 1.2fr 0.8fr; align-items: stretch; }
+      .main-grid { grid-template-columns: 360px minmax(0, 1fr); align-items: start; }
       .card {
-        background: linear-gradient(180deg, rgba(17,17,20,0.96), rgba(10,10,12,0.96));
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(15,15,20,0.92), rgba(9,9,13,0.94));
         border: 1px solid var(--border);
         border-radius: var(--radius-xl);
         box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
       }
-      .card-body { padding: 24px; }
-      .hero-title { font-size: clamp(2.1rem, 4vw, 4rem); line-height: 1.04; letter-spacing: -0.04em; margin: 0; }
-      .hero-text, .muted { color: var(--muted); }
-      .hero-text { font-size: 1.06rem; line-height: 1.8; max-width: 62ch; }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(140deg, rgba(255,255,255,0.04), transparent 25%, transparent 60%, rgba(255,255,255,0.02));
+      }
+      .card-body { position: relative; padding: 24px; }
+      .hero-title {
+        margin: 0;
+        font-size: clamp(2.4rem, 4.7vw, 5rem);
+        line-height: 0.98;
+        letter-spacing: -0.05em;
+        max-width: 12ch;
+      }
+      .hero-subtitle {
+        margin-top: 14px;
+        font-size: 1.07rem;
+        line-height: 1.82;
+        color: var(--muted);
+        max-width: 62ch;
+      }
       .pill {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: var(--chip); border: 1px solid var(--border);
-        color: var(--text); border-radius: 999px; padding: 8px 14px; font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.05);
+        color: var(--text);
+        padding: 9px 14px;
+        font-size: 0.9rem;
+      }
+      .glow-chip {
+        background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 0 0 1px rgba(255,255,255,0.02), 0 0 40px rgba(138,180,255,0.1);
       }
       .spine {
-        margin-top: 18px; padding: 18px; border-radius: var(--radius-lg);
-        border: 1px solid var(--border); background: rgba(0,0,0,0.28);
-        line-height: 1.75; color: #d4d4d8;
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+        line-height: 1.78;
+        color: #d9e0ec;
       }
-      .sidebar { position: sticky; top: 18px; max-height: calc(100vh - 36px); overflow: hidden; }
-      .sidebar .card-body { display: flex; flex-direction: column; gap: 16px; }
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+      .stat {
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.2);
+      }
+      .stat-number { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.03em; }
+      .stat-label { margin-top: 6px; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
+      .hero-orbit {
+        position: absolute;
+        right: -110px;
+        top: -110px;
+        width: 340px;
+        height: 340px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(156,196,255,0.18) 0%, rgba(156,196,255,0.08) 30%, transparent 68%);
+        filter: blur(6px);
+        pointer-events: none;
+      }
+      .insight-card {
+        height: 100%;
+        background:
+          radial-gradient(circle at top right, rgba(156,196,255,0.15), transparent 36%),
+          radial-gradient(circle at bottom left, rgba(184,120,255,0.11), transparent 34%),
+          linear-gradient(180deg, rgba(15,15,20,0.96), rgba(8,8,12,0.96));
+      }
+      .insight-text { color: var(--muted); line-height: 1.76; }
+      .meta-list { display: grid; gap: 12px; margin-top: 16px; }
+      .meta-item {
+        display: grid;
+        grid-template-columns: 36px 1fr;
+        gap: 12px;
+        padding: 14px;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.18);
+      }
+      .meta-icon {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.06);
+        color: var(--accent-2);
+      }
+      .top-strip {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 18px;
+        margin-top: 22px;
+      }
+      .story-paths {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .path-btn, .small-btn, .toggle, .chip {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(255,255,255,0.03);
+        color: var(--text);
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      }
+      .path-btn:hover, .small-btn:hover, .toggle:hover, .chip:hover, .node-btn:hover, .flash-card:hover, .source-link:hover, .timeline-event:hover, .cross-link:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255,255,255,0.16);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      }
+      .path-btn.active, .toggle.active, .node-btn.active, .small-btn.active {
+        background: var(--accent);
+        color: var(--accent-text);
+        border-color: var(--accent);
+      }
+      .node-btn.active .node-sub,
+      .node-btn.active .mini-chip,
+      .node-btn.active .node-icon {
+        color: rgba(10, 10, 15, 0.72);
+        border-color: rgba(10, 10, 15, 0.12);
+        background: rgba(10, 10, 15, 0.06);
+      }
+      .flash-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .flash-card {
+        padding: 16px;
+        border-radius: 22px;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+        cursor: pointer;
+        transition: 0.18s ease;
+      }
+      .flash-kicker { color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.72rem; }
+      .flash-title { margin-top: 8px; font-weight: 700; font-size: 1rem; }
+      .flash-body { margin-top: 8px; color: var(--muted); line-height: 1.7; font-size: 0.95rem; }
+      .sidebar {
+        position: sticky;
+        top: 16px;
+        max-height: calc(100vh - 32px);
+        overflow: hidden;
+      }
+      .sidebar .card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        height: 100%;
+        min-height: 0;
+      }
       .search-wrap { position: relative; }
       .search-input {
-        width: 100%; background: #0c0c0f; color: var(--text); border: 1px solid var(--border);
-        border-radius: 18px; padding: 13px 14px 13px 40px; outline: none;
+        width: 100%;
+        background: rgba(255,255,255,0.03);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 14px 14px 14px 42px;
+        outline: none;
       }
-      .search-input:focus { border-color: #52525b; box-shadow: 0 0 0 3px rgba(255,255,255,0.06); }
-      .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted-2); }
-      .toggle-row, .quick-row, .tag-row { display: flex; flex-wrap: wrap; gap: 10px; }
+      .search-input:focus {
+        border-color: rgba(156,196,255,0.45);
+        box-shadow: 0 0 0 4px rgba(156,196,255,0.08);
+      }
+      .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted-2);
+      }
+      .toggle-row, .tag-row { display: flex; flex-wrap: wrap; gap: 10px; }
       .toggle {
-        flex: 1; min-width: 110px; border: 1px solid var(--border); border-radius: 16px;
-        background: #0c0c0f; color: var(--muted); padding: 12px 14px; cursor: pointer;
-        transition: 0.2s ease;
+        flex: 1;
+        min-width: 92px;
+        border-radius: 16px;
+        padding: 12px 14px;
       }
-      .toggle.active, .quick-btn.active, .node-btn.active {
-        background: var(--accent); color: var(--accent-text); border-color: var(--accent);
+      .small-toggle-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
       }
-      .quick-btn, .chip {
-        border: 1px solid var(--border); background: #0d0d10; color: #e4e4e7;
-        border-radius: 999px; padding: 10px 14px; cursor: pointer; transition: 0.2s ease;
+      .node-list {
+        overflow: auto;
+        padding-right: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+        min-height: 0;
       }
-      .quick-btn:hover, .toggle:hover, .chip:hover, .node-btn:hover, .source-link:hover { transform: translateY(-1px); }
-      .node-list { overflow: auto; padding-right: 6px; display: flex; flex-direction: column; gap: 12px; }
       .node-btn {
-        text-align: left; width: 100%; padding: 16px; cursor: pointer; transition: 0.2s ease;
-        border-radius: 22px; border: 1px solid var(--border); background: rgba(10,10,12,0.66); color: var(--text);
+        width: 100%;
+        text-align: left;
+        padding: 16px;
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        cursor: pointer;
+        transition: 0.18s ease;
       }
-      .node-btn-title { font-weight: 700; margin-bottom: 8px; }
-      .node-btn-text { color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
-      .content-card { min-height: 72vh; }
-      .section-grid { display: grid; gap: 16px; }
-      .section-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .section-grid.split { grid-template-columns: 1.15fr 0.85fr; }
+      .node-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .node-icon {
+        flex: 0 0 auto;
+        width: 38px;
+        height: 38px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: rgba(255,255,255,0.06);
+        color: var(--accent-2);
+      }
+      .node-title { font-weight: 700; }
+      .node-sub { margin-top: 7px; color: var(--muted); line-height: 1.62; font-size: 0.95rem; }
+      .node-links { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+      .mini-chip {
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.08);
+        color: var(--muted-2);
+        padding: 6px 10px;
+        font-size: 0.76rem;
+      }
+      .content-card { min-height: 74vh; }
+      .eyebrow {
+        color: var(--muted-2);
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.72rem;
+        margin-bottom: 10px;
+      }
+      h2, h3, h4, p { margin: 0; }
+      h2 {
+        font-size: clamp(1.9rem, 2.8vw, 3.4rem);
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+      }
+      h3 { font-size: 1.1rem; }
+      .lead {
+        margin-top: 12px;
+        color: #d7deea;
+        line-height: 1.82;
+        font-size: 1.05rem;
+        max-width: 62ch;
+      }
+      .stack { display: flex; flex-direction: column; gap: 16px; }
+      .split-grid { display: grid; gap: 18px; grid-template-columns: 1.08fr 0.92fr; }
+      .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .three-grid { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .inner-card {
-        border: 1px solid var(--border); border-radius: 24px; background: rgba(7,7,9,0.45);
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
         padding: 20px;
       }
-      .eyebrow { color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.72rem; margin-bottom: 10px; }
-      h2, h3, h4, p { margin: 0; }
-      h2 { font-size: clamp(1.85rem, 2.6vw, 3.1rem); line-height: 1.05; letter-spacing: -0.04em; }
-      h3 { font-size: 1.1rem; }
-      .lead { font-size: 1.05rem; line-height: 1.8; color: #d4d4d8; margin-top: 12px; max-width: 58ch; }
-      .stack { display: flex; flex-direction: column; gap: 14px; }
-      .example, .source-link {
-        display: block; border: 1px solid var(--border); border-radius: 18px; background: rgba(0,0,0,0.24);
-        padding: 16px; transition: 0.2s ease;
+      .metric-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
       }
-      .example-title, .source-title { font-weight: 700; margin-bottom: 8px; }
-      .example-note, .source-url, .small { color: var(--muted); line-height: 1.7; }
+      .metric-box {
+        padding: 14px;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.2);
+      }
+      .metric-label { color: var(--muted-2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; }
+      .metric-value { margin-top: 8px; font-size: 1rem; line-height: 1.5; }
+      .chip { padding: 8px 12px; }
+      .insight-banner {
+        padding: 16px 18px;
+        border-radius: 22px;
+        border: 1px solid rgba(156,196,255,0.24);
+        background: linear-gradient(135deg, rgba(156,196,255,0.12), rgba(184,120,255,0.1));
+        color: #e8eefc;
+        line-height: 1.76;
+      }
+      .example-card, .source-link, .timeline-event, .cross-link {
+        display: block;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.18);
+        padding: 16px;
+        transition: 0.18s ease;
+      }
+      .example-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .example-title, .source-title { font-weight: 700; }
+      .example-note, .source-url, .small, .cross-copy { color: var(--muted); line-height: 1.72; }
+      .insight-pulse {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent-2);
+        font-size: 0.87rem;
+        margin-top: 10px;
+      }
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent-2);
+        box-shadow: 0 0 0 0 rgba(156,196,255,0.5);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(156,196,255,0.5); }
+        70% { box-shadow: 0 0 0 10px rgba(156,196,255,0); }
+        100% { box-shadow: 0 0 0 0 rgba(156,196,255,0); }
+      }
       .source-url { font-size: 0.82rem; margin-top: 8px; word-break: break-word; }
-      .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .source-library { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .timeline { position: relative; display: flex; flex-direction: column; gap: 12px; }
+      .timeline-event { position: relative; padding-left: 18px; }
+      .timeline-event::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 18px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent-2);
+      }
+      .timeline-era { color: var(--muted-2); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; }
+      .cross-grid { display: grid; gap: 12px; }
+      .cross-link { cursor: pointer; }
+      .cross-title { font-weight: 700; margin-bottom: 6px; }
+      .navigator {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .library-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .footer-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 22px; }
+      .footer-card { min-height: 100%; }
+      .empty-state {
+        color: var(--muted);
+        line-height: 1.78;
+        padding: 10px 0 4px;
+        border-radius: 18px;
+      }
       .sr-only {
-        position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-        overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
-      .hidden { display: none !important; }
-      .empty-state { color: var(--muted); line-height: 1.8; padding: 8px 0 2px; }
-      .meta-list { display: grid; gap: 12px; }
-      .meta-row { display: flex; gap: 12px; color: #d4d4d8; line-height: 1.7; }
-      .meta-dot { color: var(--muted-2); }
-      @media (max-width: 1100px) {
-        .hero-grid, .main-grid, .section-grid.two, .section-grid.split, .footer-grid, .source-library { grid-template-columns: 1fr; }
+      .footer-note {
+        margin-top: 12px;
+        color: var(--muted-2);
+        font-size: 0.9rem;
+        line-height: 1.68;
+      }
+      @media (max-width: 1200px) {
+        .hero-grid, .main-grid, .top-strip, .split-grid, .two-grid, .three-grid, .flash-grid, .footer-grid, .library-grid, .hero-stats, .metric-row { grid-template-columns: 1fr; }
         .sidebar { position: static; max-height: none; }
+        .hero-title { max-width: none; }
       }
-      @media (max-width: 720px) {
+      @media (max-width: 760px) {
         .container { padding: 16px; }
         .card-body { padding: 18px; }
-        .hero-text, .lead, .spine { font-size: 0.98rem; }
+        .hero-subtitle, .lead, .spine { font-size: 0.98rem; }
       }
     </style>
   </head>
@@ -143,59 +465,56 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
-      const { useMemo, useState } = React;
+      const { useMemo, useState, useEffect } = React;
 
       const themes = [
         {
           id: "survival-kinship",
           icon: "◉",
           title: "Survival, Kinship, and Group Size",
-          thesis:
-            "Humans begin vulnerable, so care networks scale from parent to family to clan to society. Religion and custom often stabilize belonging, obligation, and trust.",
-          whyItRepeats:
-            "Human children develop slowly. That makes caregiving, alliance, inheritance, and social cohesion central across cultures.",
+          shortTitle: "Kinship",
+          thesis: "Humans begin vulnerable, so care networks scale from parent to family to clan to society. Religion and custom often stabilize belonging, obligation, trust, and inheritance.",
+          whyItRepeats: "Human children develop slowly. That makes caregiving, alliance, inheritance, elder authority, and memory of descent central across cultures.",
+          insight: "The first temple may have been the family itself: a place where memory, duty, and continuity were rehearsed before they were formalized in stone.",
+          flash: "If human babies were born nearly self-sufficient, much of moral order would likely look different. Extended helplessness is one of religion's hidden architects.",
           examples: [
-            {
-              label: "Kinship and ancestor lineages in many traditional societies",
-              note: "Ancestors, family memory, and lineage obligations often anchor social identity long before modern states."
-            },
-            {
-              label: "Ancient Rome, China, and many African traditions",
-              note: "Household rites and ancestor reverence often connect family continuity to cosmic or social order."
-            },
-            {
-              label: "Abrahamic traditions",
-              note: "Family law, inheritance, marriage, and communal obligation are tied to sacred narratives and covenantal identity."
-            }
+            { label: "Kinship and ancestor lineages in many traditional societies", note: "Ancestors, family memory, and lineage obligations often anchor social identity long before centralized states." },
+            { label: "Ancient Rome, China, and many African traditions", note: "Household rites and ancestor reverence connect family continuity to cosmic or social order." },
+            { label: "Abrahamic traditions", note: "Marriage, inheritance, covenant, and communal obligation are bound to sacred law and narrative identity." },
+            { label: "Clan-based societies", note: "Obligation, revenge, alliance, and ritual often travel first through kin lines, not abstract citizenship." }
+          ],
+          timeline: [
+            { era: "Pre-state societies", note: "Kinship structures organize care, identity, and obligation before formal bureaucratic law." },
+            { era: "Ancient civilizations", note: "Household cults and ancestor rites connect family continuity to the order of the cosmos." },
+            { era: "Religious law traditions", note: "Family becomes a legal and sacred unit with divine sanction." }
           ],
           links: [
             { title: "Stanford Encyclopedia: The Concept of Religion", url: "https://plato.stanford.edu/entries/concept-religion/" },
             { title: "Britannica: Ancestor Worship", url: "https://www.britannica.com/topic/ancestor-worship" },
             { title: "Britannica Students: Ancestor Worship", url: "https://kids.britannica.com/students/article/ancestor-worship/272853" }
           ],
-          tags: ["kinship", "lineage", "identity", "belonging"]
+          tags: ["kinship", "lineage", "identity", "belonging"],
+          pathways: ["death-afterlife", "law-order", "story-symbol"]
         },
         {
           id: "death-afterlife",
           icon: "✢",
           title: "Death, Burial, and Afterlife",
-          thesis:
-            "Across documented cultures, death is rarely left as raw biological ending. Burial, funerary rites, and afterlife beliefs transform loss into continuity.",
-          whyItRepeats:
-            "Death threatens both emotional stability and social continuity. Ritual and story help make the dead legible to the living.",
+          shortTitle: "Death",
+          thesis: "Across documented cultures, death is rarely left as raw biological ending. Burial, funerary rites, mourning systems, and afterlife beliefs transform loss into continuity.",
+          whyItRepeats: "Death threatens emotional stability, identity continuity, and group order. Ritual and story help make the dead legible to the living.",
+          insight: "Humans do not merely bury bodies. They bury chaos. Funeral ritual is one of the oldest technologies for stopping grief from dissolving the social world.",
+          flash: "A grave is both evidence of mortality and a refusal to let mortality have the last word.",
           examples: [
-            {
-              label: "Neanderthal and early human burials",
-              note: "Archaeological evidence suggests very early attention to the dead, sometimes with grave goods."
-            },
-            {
-              label: "Ancient Egypt",
-              note: "Mummification, tomb texts, judgment scenes, and elaborate preparation map death into a meaningful journey."
-            },
-            {
-              label: "Greek, Celtic, Hindu, Christian, Islamic traditions",
-              note: "Different metaphysics, same underlying move: the dead are ritually processed, morally situated, and narratively continued."
-            }
+            { label: "Neanderthal and early human burials", note: "Archaeological evidence suggests very early attention to the dead, sometimes with grave goods or careful placement." },
+            { label: "Ancient Egypt", note: "Mummification, tomb texts, judgment scenes, and elaborate preparation map death into a meaningful journey." },
+            { label: "Greek, Hindu, Christian, Islamic, and many other traditions", note: "Different metaphysics, same structural move: the dead are ritually processed, morally situated, and narratively continued." },
+            { label: "Ancestor offerings and memorial rites", note: "The dead remain socially relevant through feeding, remembrance, name-keeping, and periodic ritual return." }
+          ],
+          timeline: [
+            { era: "Prehistory", note: "Burial practice appears early, suggesting symbolic attention to death long predates modern doctrine." },
+            { era: "Ancient temple societies", note: "Afterlife becomes mapped, judged, narrated, and materially supported with texts and grave goods." },
+            { era: "World religions", note: "Moral frameworks and salvation narratives integrate the dead into cosmic meaning." }
           ],
           links: [
             { title: "Britannica: Afterlife", url: "https://www.britannica.com/topic/afterlife-religion" },
@@ -204,29 +523,28 @@
             { title: "Smarthistory: Ancient Egyptian Religious Life and Afterlife", url: "https://smarthistory.org/reframing-art-history/ancient-egyptian-religious-life-and-afterlife/" },
             { title: "Religion Media Centre: Death and Funerals in World Religions", url: "https://religionmediacentre.org.uk/factsheets/death-funeral-rituals-in-world-religions/" }
           ],
-          tags: ["death", "burial", "afterlife", "mourning"]
+          tags: ["death", "burial", "afterlife", "mourning"],
+          pathways: ["ritual", "law-order", "story-symbol"]
         },
         {
           id: "ritual",
           icon: "◎",
           title: "Ritual and Repetition",
-          thesis:
-            "Religions do not survive as ideas alone. They survive through repeated bodily action: prayer, sacrifice, offerings, festivals, fasting, initiation, marriage, mourning.",
-          whyItRepeats:
-            "Ritual turns belief into muscle memory and private feeling into group synchrony.",
+          shortTitle: "Ritual",
+          thesis: "Religions do not survive as ideas alone. They survive through repeated bodily action: prayer, sacrifice, offerings, fasting, initiation, pilgrimage, marriage, and mourning.",
+          whyItRepeats: "Ritual turns belief into muscle memory and private feeling into synchronized group behavior.",
+          insight: "A belief can be forgotten. A practice can be inherited. Repetition is the bridge by which meaning survives amnesia.",
+          flash: "Where thought is unstable, rhythm is loyal. The body remembers what the mind would otherwise drop.",
           examples: [
-            {
-              label: "Rites of passage worldwide",
-              note: "Birth, puberty, marriage, and death are repeatedly ritualized because they mark dangerous transitions in identity and status."
-            },
-            {
-              label: "Ancient Egypt and Mesopotamia",
-              note: "Offerings, temple care, purification, and prescribed sacred actions are central, not peripheral."
-            },
-            {
-              label: "Modern religions",
-              note: "Salat, Eucharist, puja, meditation, pilgrimage, Sabbath practice, and holidays all transmit belonging through repetition."
-            }
+            { label: "Rites of passage worldwide", note: "Birth, puberty, marriage, and death are repeatedly ritualized because they mark dangerous transitions in identity and status." },
+            { label: "Ancient Egypt and Mesopotamia", note: "Offerings, purification, temple care, and prescribed sacred actions are central, not decorative." },
+            { label: "Modern religions", note: "Salat, Eucharist, puja, meditation, pilgrimage, Sabbath practice, and festivals all transmit belonging through repetition." },
+            { label: "Public ceremonies and civic religion", note: "Flags, anthems, oaths, memorials, and inaugurations reveal that ritual survives even where theology recedes." }
+          ],
+          timeline: [
+            { era: "Oral cultures", note: "Ritual stabilizes memory before writing can externalize doctrine." },
+            { era: "Temple and sacrificial systems", note: "Ritual becomes specialized, scheduled, and often administered by sacred professionals." },
+            { era: "Modernity", note: "Ritual remains resilient, often migrating into secular forms." }
           ],
           links: [
             { title: "Britannica: Ritual and Rites of Passage", url: "https://www.britannica.com/topic/ritual/Rites-of-passage" },
@@ -234,58 +552,56 @@
             { title: "The Met: Temple of Dendur — Architecture and Ritual", url: "https://www.metmuseum.org/essays/temple-of-dendur-architecture-and-ritual" },
             { title: "The Met: Mesopotamian Magic in the First Millennium B.C.", url: "https://www.metmuseum.org/essays/mesopotamian-magic-in-the-first-millennium-bc" }
           ],
-          tags: ["ritual", "initiation", "festival", "sacrifice"]
+          tags: ["ritual", "initiation", "festival", "sacrifice"],
+          pathways: ["death-afterlife", "sacred-space-time", "story-symbol"]
         },
         {
           id: "law-order",
           icon: "▣",
           title: "Law, Morality, and Cosmic Order",
-          thesis:
-            "As human groups scale up, rules need more force than preference. Religion often gives law and morality sacred backing: divine command, cosmic balance, karmic order, covenant, justice beyond death.",
-          whyItRepeats:
-            "Large groups need legitimacy. A rule tied to heaven, gods, ancestors, or cosmic order becomes harder to ignore than a mere suggestion.",
+          shortTitle: "Law",
+          thesis: "As human groups scale up, rules need more force than preference. Religion often gives law and morality sacred backing: divine command, cosmic balance, karmic order, covenant, justice beyond death.",
+          whyItRepeats: "Large groups need legitimacy. A rule tied to heaven, gods, ancestors, or cosmic order becomes harder to ignore than a rule tied only to human convenience.",
+          insight: "Law becomes durable when it feels older than the ruler and larger than the crowd. Sacred authority often supplies that scale.",
+          flash: "Once morality is attached to the architecture of the universe, disobedience stops looking like disagreement and starts looking like disorder itself.",
           examples: [
-            {
-              label: "Code of Hammurabi",
-              note: "A legal corpus presented within a divine-political frame, showing how law and sacred legitimacy intertwine."
-            },
-            {
-              label: "Ma'at, Dharma, Torah, Sharia, Canon Law",
-              note: "Different traditions, same structural function: embed social order in a larger moral universe."
-            },
-            {
-              label: "Judgment after death",
-              note: "When moral accounting extends beyond visible life, social order gains metaphysical reinforcement."
-            }
+            { label: "Code of Hammurabi", note: "A legal corpus presented within a divine-political frame, showing how law and sacred legitimacy intertwine." },
+            { label: "Ma'at, Dharma, Torah, Sharia, Canon Law", note: "Different traditions, same structural function: embed social order in a larger moral universe." },
+            { label: "Judgment after death", note: "When moral accounting extends beyond visible life, social order gains metaphysical reinforcement." },
+            { label: "Kingship and mandate traditions", note: "Political order is often justified by divine favor, cosmic balance, or sacred ancestry." }
+          ],
+          timeline: [
+            { era: "Early states", note: "Law is often inseparable from divine kingship and cosmic order." },
+            { era: "Scriptural civilizations", note: "Moral codes become portable through texts and commentary traditions." },
+            { era: "Modern secular states", note: "Even after secularization, law often inherits sacred tones of inviolability and ritual procedure." }
           ],
           links: [
             { title: "Britannica: Code of Hammurabi", url: "https://www.britannica.com/topic/Code-of-Hammurabi" },
             { title: "World History Encyclopedia: Code of Hammurabi", url: "https://www.worldhistory.org/Code_of_Hammurabi/" },
             { title: "Stanford Encyclopedia: Religion and Morality", url: "https://plato.stanford.edu/entries/religion-morality/" }
           ],
-          tags: ["law", "justice", "morality", "order"]
+          tags: ["law", "justice", "morality", "order"],
+          pathways: ["survival-kinship", "death-afterlife", "story-symbol"]
         },
         {
           id: "sacred-space-time",
           icon: "△",
           title: "Sacred Space and Sacred Time",
-          thesis:
-            "Religions repeatedly carve ordinary reality into charged zones: temple, shrine, altar, mountain, tomb, pilgrimage route, holy day, fast, sabbath, festival season.",
-          whyItRepeats:
-            "Marking some places and times as special helps groups enter shared seriousness and orient memory, hierarchy, and identity.",
+          shortTitle: "Sacred Space",
+          thesis: "Religions repeatedly carve ordinary reality into charged zones: temple, shrine, altar, mountain, tomb, pilgrimage route, holy day, fast, sabbath, and festival season.",
+          whyItRepeats: "Marking some places and times as special helps groups enter shared seriousness and orient memory, hierarchy, and identity.",
+          insight: "A sacred place is not just a location. It is an argument that reality has gradients, that some coordinates matter more than others.",
+          flash: "Pilgrimage is geography turned into meaning. The road itself becomes doctrine with footsteps." ,
           examples: [
-            {
-              label: "Pilgrimage traditions",
-              note: "Hajj, Kumbh Mela, Jerusalem, Bodh Gaya, shrines, saint tombs, and sacred mountains all convert geography into meaning."
-            },
-            {
-              label: "Temples, shrines, and precincts",
-              note: "From Mesopotamian temenos to Egyptian temples to household altars, sacred architecture organizes access to power."
-            },
-            {
-              label: "Calendrical time",
-              note: "Feasts, fasts, lunar cycles, New Year rites, and weekly observances make time itself religiously structured."
-            }
+            { label: "Pilgrimage traditions", note: "Hajj, Kumbh Mela, Jerusalem, Bodh Gaya, shrines, saint tombs, and sacred mountains all convert geography into meaning." },
+            { label: "Temples, shrines, and precincts", note: "From Mesopotamian temenos to Egyptian temples to household altars, sacred architecture organizes access to power." },
+            { label: "Calendrical time", note: "Feasts, fasts, lunar cycles, New Year rites, and weekly observances make time itself religiously structured." },
+            { label: "Domestic sacred space", note: "Household altars, hearths, prayer corners, and ancestor tables miniaturize the cosmos inside everyday life." }
+          ],
+          timeline: [
+            { era: "Sacred landscapes", note: "Mountains, rivers, caves, and burial grounds are often the earliest holy locations." },
+            { era: "Temple cultures", note: "Sacred space becomes architecturally formalized and politically central." },
+            { era: "Global pilgrimage and calendrical religion", note: "Space and time become portable through ritual schedules and travel networks." }
           ],
           links: [
             { title: "Britannica: Pilgrimage", url: "https://www.britannica.com/topic/pilgrimage-religion" },
@@ -293,29 +609,28 @@
             { title: "MDPI: Sacred Space and Ritual Behaviour in Ancient Mesopotamia", url: "https://www.mdpi.com/2673-9461/4/3/15" },
             { title: "The Met: Divine Egypt", url: "https://www.metmuseum.org/exhibitions/divine-egypt" }
           ],
-          tags: ["sacred space", "pilgrimage", "calendar", "temple"]
+          tags: ["sacred space", "pilgrimage", "calendar", "temple"],
+          pathways: ["ritual", "survival-kinship", "story-symbol"]
         },
         {
           id: "story-symbol",
           icon: "✦",
           title: "Story, Symbol, and God-Formation",
-          thesis:
-            "A religion becomes durable when its stories, symbols, and practices stop feeling merely invented and begin functioning as reality-organizers. That is where 'big stories' start behaving like gods.",
-          whyItRepeats:
-            "Humans are symbolic creatures. We do not only react to what is physically present; we live inside shared meanings.",
+          shortTitle: "Gods",
+          thesis: "A religion becomes durable when its stories, symbols, and practices stop feeling merely invented and begin functioning as reality-organizers. That is where big stories start behaving like gods.",
+          whyItRepeats: "Humans are symbolic creatures. We do not only react to what is physically present; we live inside shared meanings, images, names, and inherited narratives.",
+          insight: "A god can be understood as a story dense enough to organize emotion, attention, law, memory, and sacrifice across generations.",
+          flash: "Even if a symbol begins as invention, repetition can make it operational. Enough devotion gives fiction civilizational weight.",
           examples: [
-            {
-              label: "Creation stories and world-order myths",
-              note: "Different contents, same role: explain why there is something, why order matters, and where humans fit."
-            },
-            {
-              label: "Living sacred images and texts",
-              note: "Images, icons, scriptures, relics, and names become active interfaces between group memory and sacred presence."
-            },
-            {
-              label: "Old gods and new gods",
-              note: "The objects of devotion change over time, but the underlying machinery of collective attention remains recognizable."
-            }
+            { label: "Creation stories and world-order myths", note: "Different contents, same role: explain why there is something, why order matters, and where humans fit." },
+            { label: "Living sacred images and texts", note: "Images, icons, scriptures, relics, and names become active interfaces between group memory and sacred presence." },
+            { label: "Old gods and new gods", note: "The objects of devotion change over time, but the machinery of collective attention remains recognizable." },
+            { label: "Secular symbolic power", note: "Nations, markets, celebrity, and ideology can absorb god-like features when they command ritual, sacrifice, and identity." }
+          ],
+          timeline: [
+            { era: "Mythic worlds", note: "Narrative binds human activity to cosmic drama." },
+            { era: "Textual religion", note: "Symbols become canonized, portable, and interpretable across time." },
+            { era: "Modern symbolic systems", note: "Devotion migrates into media, nationalism, technology, and image culture." }
           ],
           links: [
             { title: "Stanford Encyclopedia: Philosophy of Religion", url: "https://plato.stanford.edu/entries/philosophy-religion/" },
@@ -323,21 +638,45 @@
             { title: "The Met: Divine Egypt", url: "https://www.metmuseum.org/exhibitions/divine-egypt" },
             { title: "Stanford Encyclopedia: Religion and Science", url: "https://plato.stanford.edu/archives/spr2022/entries/religion-science/" }
           ],
-          tags: ["myth", "symbol", "god", "meaning"]
+          tags: ["myth", "symbol", "god", "meaning"],
+          pathways: ["death-afterlife", "ritual", "law-order"]
         }
       ];
 
-      const quickPaths = [
-        { id: "death-afterlife", label: "Start with death" },
-        { id: "ritual", label: "Start with ritual" },
-        { id: "law-order", label: "Start with law" },
-        { id: "story-symbol", label: "Start with gods" }
+      const guidedJourneys = [
+        { id: "death-afterlife", label: "Start with death", description: "See how mortality generates ritual, justice, and gods." },
+        { id: "ritual", label: "Start with ritual", description: "Watch belief become bodily repetition and group memory." },
+        { id: "law-order", label: "Start with law", description: "Trace how sacred order scales fragile groups into civilizations." },
+        { id: "story-symbol", label: "Start with gods", description: "Follow the route by which stories become operative realities." }
+      ];
+
+      const flashCards = [
+        {
+          id: "flash-1",
+          kicker: "First principle",
+          title: "Religion often answers recurring human conditions, not one-time historical accidents.",
+          body: "Across distance and time, the same pressures return: vulnerability, death, uncertainty, conflict, memory, and the need for durable belonging."
+        },
+        {
+          id: "flash-2",
+          kicker: "Design insight",
+          title: "Ritual is memory made physical.",
+          body: "It lets a group carry meaning even when not everyone can explain the doctrine in abstract terms."
+        },
+        {
+          id: "flash-3",
+          kicker: "Civilizational move",
+          title: "Law becomes stickier when attached to the cosmos.",
+          body: "Sacred framing turns preference into obligation and disagreement into disorder."
+        }
       ];
 
       function App() {
         const [query, setQuery] = useState("");
         const [selected, setSelected] = useState("death-afterlife");
         const [mode, setMode] = useState("map");
+        const [detailView, setDetailView] = useState("insight");
+        const [flashIndex, setFlashIndex] = useState(0);
 
         const filteredThemes = useMemo(() => {
           const q = query.trim().toLowerCase();
@@ -345,10 +684,14 @@
           return themes.filter((theme) => {
             const haystack = [
               theme.title,
+              theme.shortTitle,
               theme.thesis,
               theme.whyItRepeats,
+              theme.insight,
+              theme.flash,
               ...(theme.tags || []),
               ...theme.examples.flatMap((e) => [e.label, e.note]),
+              ...theme.timeline.flatMap((t) => [t.era, t.note]),
               ...theme.links.map((l) => l.title)
             ].join(" ").toLowerCase();
             return haystack.includes(q);
@@ -356,52 +699,150 @@
         }, [query]);
 
         const active = filteredThemes.find((t) => t.id === selected) || filteredThemes[0] || themes[0];
+        const activeJourney = guidedJourneys.find((j) => j.id === selected);
+        const flash = flashCards[flashIndex % flashCards.length];
 
-        React.useEffect(() => {
+        useEffect(() => {
           if (!filteredThemes.some((t) => t.id === selected) && filteredThemes[0]) {
             setSelected(filteredThemes[0].id);
           }
         }, [filteredThemes, selected]);
+
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setFlashIndex((value) => (value + 1) % flashCards.length);
+          }, 5200);
+          return () => clearInterval(interval);
+        }, []);
+
+        const relatedThemes = active ? active.pathways.map((id) => themes.find((theme) => theme.id === id)).filter(Boolean) : [];
 
         return (
           <div className="page">
             <div className="container">
               <div className="grid hero-grid" aria-label="Exploratorium introduction">
                 <section className="card">
+                  <div className="hero-orbit"></div>
                   <div className="card-body">
-                    <div className="pill" aria-label="Project label">◌ Religion + History Exploratorium</div>
-                    <h1 className="hero-title" style={{ marginTop: 16 }}>Big stories, repeated structures, recurring gods</h1>
-                    <p className="hero-text" style={{ marginTop: 16 }}>
-                      A browser-ready field guide to common patterns across documented religions and historical societies: kinship, death,
+                    <div className="pill glow-chip">◌ Religion + History Exploratorium</div>
+                    <h1 className="hero-title" style={{ marginTop: 18 }}>Big stories, repeated structures, recurring gods</h1>
+                    <p className="hero-subtitle">
+                      A richer, more interactive browser-based map of common patterns across documented religions and historical societies: kinship, death,
                       ritual, law, sacred space, and symbolic world-building.
                     </p>
                     <div className="spine">
-                      <strong style={{ color: "#fafafa" }}>Core spine:</strong> People are small and life is scary. So people stay together,
-                      make rules, and tell big stories to help them feel safe. When lots of people believe the same big story for a very long time,
-                      that story can start behaving like a god.
+                      <strong style={{ color: "#fafafa" }}>Core spine:</strong> People are small and life is scary. So people stay together, make rules,
+                      and tell big stories to help them feel safe. When lots of people believe the same big story for a very long time, that story can start behaving like a god.
+                    </div>
+
+                    <div className="hero-stats">
+                      <div className="stat">
+                        <div className="stat-number">6</div>
+                        <div className="stat-label">structural pattern nodes that recur across religions and civilizations</div>
+                      </div>
+                      <div className="stat">
+                        <div className="stat-number">24+</div>
+                        <div className="stat-label">cross-civilizational examples and historical touchpoints</div>
+                      </div>
+                      <div className="stat">
+                        <div className="stat-number">1</div>
+                        <div className="stat-label">central question: what do humans keep building when life feels fragile?</div>
+                      </div>
                     </div>
                   </div>
                 </section>
 
-                <aside className="card">
+                <aside className="card insight-card">
                   <div className="card-body">
-                    <h3>How to use this</h3>
-                    <p className="muted" style={{ lineHeight: 1.8 }}>
-                      This does not claim to mathematically prove metaphysics. It maps repeatable human commonalities in documented religion and history.
+                    <div className="eyebrow">How to navigate</div>
+                    <h3 style={{ fontSize: "1.35rem" }}>Every click should collapse complexity into one clean idea.</h3>
+                    <p className="insight-text" style={{ marginTop: 12 }}>
+                      This experience does not claim to prove metaphysics. It shows that recurring human conditions repeatedly generate recurring religious structures.
                     </p>
                     <div className="meta-list">
-                      <div className="meta-row"><span className="meta-dot">•</span><span>Use the map to explore structural patterns that recur across civilizations.</span></div>
-                      <div className="meta-row"><span className="meta-dot">•</span><span>Open any node for examples and further reading from encyclopedias, museums, and reference sources.</span></div>
-                      <div className="meta-row"><span className="meta-dot">•</span><span>Switch between Map and Library view depending on whether you want a conceptual overview or a source-first browse.</span></div>
+                      <div className="meta-item">
+                        <div className="meta-icon">✦</div>
+                        <div>
+                          <div style={{ fontWeight: 700 }}>Start with a guided path</div>
+                          <div className="small">Choose death, ritual, law, or gods and move outward from one strong insight.</div>
+                        </div>
+                      </div>
+                      <div className="meta-item">
+                        <div className="meta-icon">◎</div>
+                        <div>
+                          <div style={{ fontWeight: 700 }}>Use cross-links</div>
+                          <div className="small">The point is not isolated topics. The point is how each pattern feeds the others.</div>
+                        </div>
+                      </div>
+                      <div className="meta-item">
+                        <div className="meta-icon">→</div>
+                        <div>
+                          <div style={{ fontWeight: 700 }}>Leave through evidence</div>
+                          <div className="small">Each node sends you outward to reference sources, museum essays, and philosophy entries.</div>
+                        </div>
+                      </div>
                     </div>
+                    <div className="insight-pulse"><span className="pulse-dot"></span> rotating insight engine active</div>
                   </div>
                 </aside>
               </div>
 
-              <div className="grid main-grid" style={{ marginTop: 24 }}>
+              <div className="top-strip">
+                <section className="card">
+                  <div className="card-body">
+                    <div className="eyebrow">Guided journeys</div>
+                    <h3 style={{ fontSize: "1.25rem" }}>Choose a path that reveals the machinery.</h3>
+                    <div className="story-paths">
+                      {guidedJourneys.map((journey) => (
+                        <button
+                          key={journey.id}
+                          className={`path-btn ${selected === journey.id ? "active" : ""}`}
+                          onClick={() => {
+                            setSelected(journey.id);
+                            setMode("map");
+                          }}
+                        >
+                          {journey.label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="footer-note">
+                      {activeJourney ? activeJourney.description : "Choose one entry point and let the cross-links do the rest."}
+                    </p>
+                  </div>
+                </section>
+
+                <section className="card">
+                  <div className="card-body">
+                    <div className="eyebrow">Flash of insight</div>
+                    <div className="flash-grid">
+                      {flashCards.map((card, idx) => (
+                        <button
+                          key={card.id}
+                          className="flash-card"
+                          onClick={() => setFlashIndex(idx)}
+                          style={{
+                            borderColor: idx === flashIndex ? "rgba(156,196,255,0.35)" : undefined,
+                            background: idx === flashIndex ? "linear-gradient(180deg, rgba(156,196,255,0.12), rgba(255,255,255,0.03))" : undefined
+                          }}
+                        >
+                          <div className="flash-kicker">{card.kicker}</div>
+                          <div className="flash-title">{card.title}</div>
+                          <div className="flash-body">{card.body}</div>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="insight-banner" style={{ marginTop: 14 }}>
+                      <strong>{flash.title}</strong> {flash.body}
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <div className="grid main-grid" style={{ marginTop: 22 }}>
                 <aside className="card sidebar" aria-label="Navigation sidebar">
                   <div className="card-body">
-                    <label className="sr-only" htmlFor="theme-search">Search themes</label>
+                    <label className="sr-only" htmlFor="theme-search">Search patterns</label>
                     <div className="search-wrap">
                       <span className="search-icon">⌕</span>
                       <input
@@ -409,7 +850,7 @@
                         className="search-input"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search death, ritual, law, pilgrimage..."
+                        placeholder="Search death, burial, pilgrimage, law, ancestor..."
                       />
                     </div>
 
@@ -418,21 +859,15 @@
                       <button className={`toggle ${mode === "library" ? "active" : ""}`} onClick={() => setMode("library")} aria-pressed={mode === "library"}>Library</button>
                     </div>
 
-                    <div className="quick-row">
-                      {quickPaths.map((path) => (
-                        <button
-                          key={path.id}
-                          className={`quick-btn ${selected === path.id ? "active" : ""}`}
-                          onClick={() => setSelected(path.id)}
-                        >
-                          {path.label}
-                        </button>
-                      ))}
+                    <div className="small-toggle-row" aria-label="Detail mode">
+                      <button className={`small-btn ${detailView === "insight" ? "active" : ""}`} onClick={() => setDetailView("insight")}>Insight</button>
+                      <button className={`small-btn ${detailView === "timeline" ? "active" : ""}`} onClick={() => setDetailView("timeline")}>Timeline</button>
+                      <button className={`small-btn ${detailView === "crosslinks" ? "active" : ""}`} onClick={() => setDetailView("crosslinks")}>Cross-links</button>
                     </div>
 
                     <div className="node-list" aria-label="Pattern nodes">
                       {filteredThemes.length === 0 ? (
-                        <div className="empty-state">No matches. Try a broader search like <em>death</em>, <em>law</em>, or <em>pilgrimage</em>.</div>
+                        <div className="empty-state">No matches. Try broader terms like <em>death</em>, <em>law</em>, <em>ancestor</em>, or <em>pilgrimage</em>.</div>
                       ) : (
                         filteredThemes.map((theme) => (
                           <button
@@ -440,8 +875,16 @@
                             className={`node-btn ${active && active.id === theme.id ? "active" : ""}`}
                             onClick={() => setSelected(theme.id)}
                           >
-                            <div className="node-btn-title">{theme.icon} {theme.title}</div>
-                            <div className="node-btn-text">{theme.thesis}</div>
+                            <div className="node-top">
+                              <div className="node-icon">{theme.icon}</div>
+                              <div>
+                                <div className="node-title">{theme.title}</div>
+                                <div className="node-sub">{theme.thesis}</div>
+                              </div>
+                            </div>
+                            <div className="node-links">
+                              {theme.tags.slice(0, 3).map((tag) => <span key={tag} className="mini-chip">{tag}</span>)}
+                            </div>
                           </button>
                         ))
                       )}
@@ -454,58 +897,116 @@
                     {mode === "map" && active ? (
                       <div className="stack">
                         <div>
-                          <div className="pill">{active.icon} Pattern Node</div>
+                          <div className="pill glow-chip">{active.icon} Pattern Node</div>
                           <h2 style={{ marginTop: 16 }}>{active.title}</h2>
                           <p className="lead">{active.thesis}</p>
+                          <div className="navigator">
+                            {relatedThemes.map((theme) => (
+                              <button key={theme.id} className="chip" onClick={() => setSelected(theme.id)}>
+                                Jump to {theme.shortTitle}
+                              </button>
+                            ))}
+                          </div>
                         </div>
 
-                        <div className="section-grid two">
+                        <div className="metric-row">
+                          <div className="metric-box">
+                            <div className="metric-label">Core function</div>
+                            <div className="metric-value">{active.tags[0]} becomes a gateway into larger order.</div>
+                          </div>
+                          <div className="metric-box">
+                            <div className="metric-label">Structural move</div>
+                            <div className="metric-value">Private vulnerability is converted into shared pattern.</div>
+                          </div>
+                          <div className="metric-box">
+                            <div className="metric-label">What it builds</div>
+                            <div className="metric-value">Durability across memory, bodies, and generations.</div>
+                          </div>
+                        </div>
+
+                        <div className="insight-banner">
+                          <strong>Flash insight:</strong> {active.flash}
+                        </div>
+
+                        <div className="two-grid">
                           <section className="inner-card">
                             <div className="eyebrow">Why it repeats</div>
                             <p className="lead" style={{ marginTop: 0 }}>{active.whyItRepeats}</p>
                           </section>
                           <section className="inner-card">
-                            <div className="eyebrow">Tags</div>
-                            <div className="tag-row">
-                              {active.tags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}
-                            </div>
+                            <div className="eyebrow">Primary insight</div>
+                            <p className="lead" style={{ marginTop: 0 }}>{active.insight}</p>
                           </section>
                         </div>
 
-                        <div className="section-grid split">
+                        <div className="split-grid">
                           <section className="inner-card">
                             <div className="eyebrow">Examples across history and religion</div>
                             <h3 style={{ marginBottom: 14 }}>Not identical beliefs. Repeating structural moves.</h3>
                             <div className="stack">
                               {active.examples.map((example, idx) => (
-                                <article className="example" key={idx}>
-                                  <div className="example-title">{example.label}</div>
-                                  <div className="example-note">{example.note}</div>
+                                <article className="example-card" key={idx}>
+                                  <div className="example-top">
+                                    <div className="example-title">{example.label}</div>
+                                    <div className="mini-chip">Example {idx + 1}</div>
+                                  </div>
+                                  <div className="example-note" style={{ marginTop: 8 }}>{example.note}</div>
                                 </article>
                               ))}
                             </div>
                           </section>
 
                           <section className="inner-card">
-                            <div className="eyebrow">Further exploration</div>
-                            <h3 style={{ marginBottom: 14 }}>Open reference trails.</h3>
-                            <div className="stack">
-                              {active.links.map((link) => (
-                                <a className="source-link" key={link.url} href={link.url} target="_blank" rel="noreferrer noopener">
-                                  <div className="source-title">{link.title} ↗</div>
-                                  <div className="source-url">{link.url}</div>
-                                </a>
-                              ))}
+                            <div className="eyebrow">
+                              {detailView === "timeline" ? "Timeline lens" : detailView === "crosslinks" ? "Cross-links" : "Further exploration"}
                             </div>
+                            {detailView === "timeline" ? (
+                              <div>
+                                <h3 style={{ marginBottom: 14 }}>How the pattern unfolds over time</h3>
+                                <div className="timeline">
+                                  {active.timeline.map((item, idx) => (
+                                    <div className="timeline-event" key={idx}>
+                                      <div className="timeline-era">{item.era}</div>
+                                      <div className="example-note" style={{ marginTop: 6 }}>{item.note}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : detailView === "crosslinks" ? (
+                              <div>
+                                <h3 style={{ marginBottom: 14 }}>Where this node connects</h3>
+                                <div className="cross-grid">
+                                  {relatedThemes.map((theme) => (
+                                    <button key={theme.id} className="cross-link" onClick={() => setSelected(theme.id)}>
+                                      <div className="cross-title">{theme.icon} {theme.title}</div>
+                                      <div className="cross-copy">{theme.thesis}</div>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : (
+                              <div>
+                                <h3 style={{ marginBottom: 14 }}>Open reference trails</h3>
+                                <div className="stack">
+                                  {active.links.map((link) => (
+                                    <a className="source-link" key={link.url} href={link.url} target="_blank" rel="noreferrer noopener">
+                                      <div className="source-title">{link.title} ↗</div>
+                                      <div className="source-url">{link.url}</div>
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </section>
                         </div>
                       </div>
                     ) : (
                       <div>
-                        <h2>Source Library</h2>
-                        <p className="lead">Browse by concept, then leave the map and follow the evidence outward.</p>
-                        <div className="source-library" style={{ marginTop: 24 }}>
-                          {filteredThemes.map((theme) => (
+                        <div className="eyebrow">Source library</div>
+                        <h2>Browse evidence by pattern</h2>
+                        <p className="lead">This is the source-first view: move from node to reference without losing the larger architecture.</p>
+                        {filteredThemes.length === 0 ? (
+                          <div className="empty-st{filteredThemes.map((theme) => (
                             <section className="inner-card" key={theme.id}>
                               <div className="eyebrow">{theme.icon} {theme.tags.join(" • ")}</div>
                               <h3 style={{ marginBottom: 10 }}>{theme.title}</h3>
@@ -517,6 +1018,15 @@
                                   </a>
                                 ))}
                               </div>
+                              <div className="navigator" style={{ marginTop: 14 }}>
+                                <button className="chip" onClick={() => { setSelected(theme.id); setMode("map"); }}>Open node</button>
+                              </div>
+                            </section>
+                          ))}
+                          </div>
+                        )}
+                      </div>button className="chip" onClick={() => { setSelected(theme.id); setMode("map"); }}>Open node</button>
+                              </div>
                             </section>
                           ))}
                         </div>
@@ -526,10 +1036,34 @@
                 </main>
               </div>
 
-              <div className="grid footer-grid" style={{ marginTop: 24 }}>
-                <section className="card"><div className="card-body"><h3>What this suggests</h3><p className="hero-text" style={{ fontSize: "0.98rem", marginTop: 10 }}>Religions differ profoundly in content, but many solve the same human problems: mortality, order, belonging, uncertainty, and meaning.</p></div></section>
-                <section className="card"><div className="card-body"><h3>What it does not claim</h3><p className="hero-text" style={{ fontSize: "0.98rem", marginTop: 10 }}>It does not disprove or prove any deity. It shows that recurring human conditions repeatedly generate recurring religious structures.</p></div></section>
-                <section className="card"><div className="card-body"><h3>Best next move</h3><p className="hero-text" style={{ fontSize: "0.98rem", marginTop: 10 }}>Start with one node, follow the links, and test whether the pattern still holds when you look at civilizations far apart in time and geography.</p></div></section>
+              <div className="footer-grid">
+                <section className="card footer-card">
+                  <div className="card-body">
+                    <div className="eyebrow">What this suggests</div>
+                    <h3>Religions differ in content, but often solve the same classes of problems.</h3>
+                    <p className="hero-subtitle" style={{ marginTop: 10 }}>
+                      Mortality, order, belonging, uncertainty, memory, and symbolic cohesion recur so often that similar sacred structures keep reappearing.
+                    </p>
+                  </div>
+                </section>
+                <section className="card footer-card">
+                  <div className="card-body">
+                    <div className="eyebrow">What it does not claim</div>
+                    <h3>This is a map of commonality, not a final verdict on metaphysics.</h3>
+                    <p className="hero-subtitle" style={{ marginTop: 10 }}>
+                      It does not prove or disprove any deity. It shows how recurring human conditions repeatedly generate recurring religious forms.
+                    </p>
+                  </div>
+                </section>
+                <section className="card footer-card">
+                  <div className="card-body">
+                    <div className="eyebrow">Best next move</div>
+                    <h3>Follow one node all the way outward.</h3>
+                    <p className="hero-subtitle" style={{ marginTop: 10 }}>
+                      Start with death, ritual, law, or gods. Then test the pattern against civilizations far apart in geography, time, and doctrine.
+                    </p>
+                  </div>
+                </section>
               </div>
             </div>
           </div>
